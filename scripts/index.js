@@ -1,7 +1,5 @@
 const name = prompt('whats your name');
 
-
-
 console.log('Hello ' + name + '!!!!');
 
 
