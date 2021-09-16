@@ -1,37 +1,11 @@
-const name = prompt('whats your name');
+const subs = parseInt(prompt('how many subscribers do you have?'));
 
-console.log('Hello ' + name + '!!!!');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// console.log(0 == '');
-// console.log(0 == '0');
-// console.log(false == '0');
-// console.log(false == 0);
-// console.log()
-//
-// console.log('' === '0');
-// console.log(0 === '');
-// console.log(0 === '0');
-// console.log(false === '0');
-// console.log(false === 0);
+if (isNaN(subs)) {
+    console.log('Please type a number');
+} else {
+    if (subs >= 100) {
+        console.log('Congratulations!');
+    } else {
+        console.log(`You need ${100 - subs} subscribers to get the Silver Button`);
+    };
+};
