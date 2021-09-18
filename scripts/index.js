@@ -1,7 +1,13 @@
 //Math.floor()
 //Math.ceil()
 //Math.round()
-for(let i = 0; i < 4; i++){
+let score = 0;
+let questionCount = 0
+do {
+    questionCount = parseInt(prompt(`How many questions you want to answer? `));
+} while(isNaN(questionCount));
+
+for(let i = 0; i < questionCount; i++){
     const firstNumber = Math.floor(Math.random() * 10) + 1;
     const secondNumber = Math.floor(Math.random() * 10) + 1;
 
@@ -13,6 +19,7 @@ for(let i = 0; i < 4; i++){
     console.log(userResult === result);
 
     if(userResult === result){
-        alert('Your answer is correct!');
+        score++;
     }
 }
+alert(`Your answered correctly ${score}`);
