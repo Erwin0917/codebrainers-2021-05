@@ -1,47 +1,17 @@
-//Math.floor()
-//Math.ceil()
-//Math.round()
+const array = ['Jurek', 'Franek', 'Mateusz', 'Emilka'];
 
-function getRandomNumberFrom1To10() {
-    return Math.floor(Math.random() * 10) + 1;
-}
+// array.push(4, 5)
+// array.pop();
+// array.unshift(3)
+// array.shift()
+// console.log(array.splice(2,1));
+// console.log(array.indexOf('Jurek'));
 
-function getNumberOfQuestions() {
-    const result = prompt(`How many questions you want to answer? `);
-    console.log(parseInt(result))
-    return result;
-}
+console.log(array.indexOf(''));
 
-function cancelAction(value) {
-    return value === null;
-}
 
-function isNumberOfQuestionsCorrect(value) {
-    return isNaN(value) || value < 1;
-}
 
-let score = 0;
-let questionCount = 0
-do {
-    questionCount = getNumberOfQuestions();
-    if(cancelAction(questionCount)) {
-        break;
-    }
-} while(isNumberOfQuestionsCorrect(questionCount));
 
-for(let i = 0; i < questionCount; i++){
-    const firstNumber = getRandomNumberFrom1To10();
-    const secondNumber = getRandomNumberFrom1To10();
 
-    const userResult = parseInt(prompt(`How much is ${firstNumber} * ${secondNumber}`));
-    const result = firstNumber * secondNumber;
 
-    console.log('userResult', userResult, typeof userResult);
-    console.log('result', result, typeof result);
-    console.log(userResult === result);
 
-    if(userResult === result){
-        score++;
-    }
-}
-alert(`Your answered correctly ${score}`);
