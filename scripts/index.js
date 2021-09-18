@@ -1,7 +1,7 @@
-const ticket = [2, 1];
+const ticket = [2, 1, 3, 4, 5, 6];
 
-const lottoNumbers = [];
-const numberDrawn = [];
+let lottoNumbers = [];
+let numberDrawn = [];
 
 function populateArray(){
     for(let i = 1; i < 50; i++) {
@@ -11,34 +11,30 @@ function populateArray(){
 
 function getRandomFromLottoNumber(arr) {
     const number = Math.floor(Math.random() * arr.length) + 1;
+    // console.log('getRandomFromLottoNumber', number);
     return number;
 }
 
-function generateRandomNumberFromArray(array){
-    return array[getRandomFromLottoNumber(array)];
-}
 function pickNumber() {
-    const x = generateRandomNumberFromArray(lottoNumbers);
+    const x = getRandomFromLottoNumber(lottoNumbers);
     const index = lottoNumbers.indexOf(x);
     lottoNumbers.splice(index,1);
     return x;
 }
 
-
 function lottery() {
-
     populateArray();
-    console.log(`Lotto - ${lottoNumbers}`);
+    // console.log(`Lotto - ${lottoNumbers}`);
     for (let i = 0; i < 6; i++) {
         const numberPicked = pickNumber();
         numberDrawn.push(numberPicked);
-        console.log(`picked ${numberPicked}`);
+        // console.log(`picked ${numberPicked}`);
     }
-    console.log(`finish lottery`);
 }
 
 function compareArraysOfNumbers(array1, array2){
     if (array1.length !== array2.length){
+        // console.log('wrong array length')
         return false;
     }
     for(let i = 0; i < array1.length; i++){
@@ -69,18 +65,19 @@ function checkTicket(){
     return true;
 }
 
-
-
 let numberOfLotteries = 0;
 do {
     lottery();
+    console.log('lottoNumbers', lottoNumbers);
+    console.log('numberDrawn', numberDrawn);
     numberOfLotteries++;
-    console.log(checkTicket());
+    lottoNumbers = [];
+    numberDrawn = [];
+    // console.log(checkTicket());
 }
 while (checkTicket());
 
 alert(`Ticket won in ${numberOfLotteries} draw`);
 
-console.log('lottoNumbers', lottoNumbers);
-console.log('numberDrawn', numberDrawn);
+
 
