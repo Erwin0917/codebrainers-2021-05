@@ -25,20 +25,11 @@ const numbersAndNames = [3, 'krystian', 'ala', 2,  'barnaba', 5, 'basia', 10, 'j
 
 const numbersSquare = numbersAndNames.map(x => x**2);
 
-// function numbersOnly(value) {
-//     if (typeof(value) === 'number') {
-//         return value;
-//     }
-// };
-//
-// const numbers = numbersSquare.filter(numbersOnly);
-// console.log(numbers);
-
-const numbersOnly = value => {
+function numbersOnly(value) {
     if (typeof(value) === 'number') {
         return value;
     }
-}
+};
 
 const numbers = numbersSquare.filter(numbersOnly);
 console.log(numbers);
