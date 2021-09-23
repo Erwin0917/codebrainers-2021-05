@@ -1,73 +1,42 @@
-// POJO Plain Old Javascript Object
-
-const car = {
-    color: 'red',
-    maximumSpeed: 230,
-    numberOfWheels: 4
-};
-
-
-// Class-based object
-
-class Car {
-
-    constructor(speed, maximumSpeed, color = 'yellow') {
-        if (typeof color === 'string') {
-            this.color = color;
-        };
-        this.maximumSpeed = this.numericValue(maximumSpeed, 250);
-        this.speed = this.numericValue(speed, 0);
+class Person {
+    constructor() {
+        this.hitPoints = 0;
+        this.strength = 0;
     }
 
-    numericValue(value, defaultValue) {
-        if (typeof value === 'number' && isNaN(value) === false) {
-            return value;
-        } else {
-            return defaultValue;
-        }
+    isAlive() {
+        return this.hitPoints > 0;
     }
-
-    setSpeed(speed) {
-        if (speed <= this.maximumSpeed && speed >= 0) {
-            this.speed = speed;
-        }
-    }
-
-    accelerate(howMuch) {
-        const newSpeed = howMuch + this.speed;
-
-        if (howMuch >= 0) {
-            this.setSpeed(newSpeed);
-        }
-    }
-
-    decelerate(howMuch) {
-        const newSpeed = this.speed - howMuch;
-
-        if (howMuch >= 0) {
-            this.setSpeed(newSpeed);
-        }
-    }
-
-
 }
 
-const newCar = new Car('Yello');
+class Character extends Person {
+    constructor() {
+        super();
+        this.hitPoints = 50;
+        this.strength = 20;
+    }
 
-console.log('After tryCatch');
+    isAlive() {
+        return super.isAlive() && this.strength > 0;
+    }
+}
 
-// const newCar = new Car('Black');
+class Hero extends Character {
+    constructor() {
+        super();
+        this.hitPoints = 150;
+        this.strength = 50;
+    }
+}
+
+class Villain extends Character {
+    constructor() {
+        super();
+        this.hitPoints = 30;
+        this.strength = 10;
+    }
+}
 
 
-console.log(newCar.setSpeed(100), newCar.accelerate(50));
-console.log('setSpeed(), with -200');
-newCar.setSpeed(-200);
-console.log(newCar);
-// console.log(newCar.setSpeed('dsadasd'));
-// console.log(newCar.setSpeed(undefined));
-// console.log(newCar);
-
-
-
-
-
+const villain = new Villain();
+const hero = new Hero();
