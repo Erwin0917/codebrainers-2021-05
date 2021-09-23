@@ -7,6 +7,7 @@ class Person {
     isAlive() {
         return this.hitPoints > 0;
     }
+
 }
 
 class Character extends Person {
@@ -18,6 +19,21 @@ class Character extends Person {
 
     isAlive() {
         return super.isAlive() && this.strength > 0;
+    }
+
+    attack(target, power) {
+        let hitPointsAfterAttack = target.hitPoints - power;
+        if (target instanceof Character) {
+            if (hitPointsAfterAttack < 0) {
+               hitPointsAfterAttack = 0;
+            }
+            target.setHitPoints(hitPointsAfterAttack)
+        }
+        return target.hitPoints
+    }
+
+    setHitPoints(hitpoints){
+        this.hitPoints = hitpoints;
     }
 }
 
@@ -40,3 +56,14 @@ class Villain extends Character {
 
 const villain = new Villain();
 const hero = new Hero();
+
+console.log(villain);
+hero.attack(villain, 30);
+console.log('After attack', villain);
+
+while (hero.isAlive()) {
+    console.log(hero);
+    villain.attack(hero, 20);
+    console.log('After attack', hero);
+}
+
