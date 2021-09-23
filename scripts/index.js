@@ -28,7 +28,7 @@ class Car {
     }
 
     setSpeed(speed) {
-        if (speed <= this.maximumSpeed || speed >= 0) {
+        if (speed <= this.maximumSpeed && speed >= 0) {
             this.speed = speed;
         }
     }
@@ -52,15 +52,20 @@ class Car {
 
 }
 
-const newCar = new Car(200, 600);
-// const car2 = new Car(230, 4, 'red');
+const newCar = new Car('Yello');
 
-// newCar.setSpeed(210);
-// newCar.setSpeed(260);
-// newCar.setSpeed('qwe');
-// console.log(newCar.setSpeed(-210));
+console.log('After tryCatch');
+
+// const newCar = new Car('Black');
+
 
 console.log(newCar.setSpeed(100), newCar.accelerate(50));
+console.log('setSpeed(), with -200');
+newCar.setSpeed(-200);
+console.log(newCar);
+// console.log(newCar.setSpeed('dsadasd'));
+// console.log(newCar.setSpeed(undefined));
+// console.log(newCar);
 
 
 
