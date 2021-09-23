@@ -12,43 +12,55 @@ const car = {
 class Car {
 
     constructor(speed, maximumSpeed, color = 'yellow') {
-
-        if (typeof speed === 'number' && typeof maximumSpeed === 'number' && isNaN(speed) === false && isNaN(maximumSpeed) === false && typeof color === 'string') {
+        if (typeof color === 'string') {
             this.color = color;
-            this.maximumSpeed = maximumSpeed;
-            this.speed = speed;
+        };
+        this.maximumSpeed = this.numericValue(maximumSpeed, 250);
+        this.speed = this.numericValue(speed, 0);
+    }
+
+    numericValue(value, defaultValue) {
+        if (typeof value === 'number' && isNaN(value) === false) {
+            return value;
+        } else {
+            return defaultValue;
         }
     }
 
     setSpeed(speed) {
-        if (typeof speed !== 'number') {
-            console.log('Wrong value!!');
-        } else if (speed > this.maximumSpeed || speed < 0) {
-            console.log('Speed to high or <0 !!');
-        } else {
+        if (speed <= this.maximumSpeed || speed >= 0) {
             this.speed = speed;
-            return true;
         }
     }
 
     accelerate(howMuch) {
+        const newSpeed = howMuch + this.speed;
 
+        if (howMuch >= 0) {
+            this.setSpeed(newSpeed);
+        }
     }
 
     decelerate(howMuch) {
+        const newSpeed = this.speed - howMuch;
 
+        if (howMuch >= 0) {
+            this.setSpeed(newSpeed);
+        }
     }
 
 
 }
 
-const newCar = new Car(200, 6);
+const newCar = new Car(200, 600);
 // const car2 = new Car(230, 4, 'red');
 
-newCar.setSpeed(210);
-newCar.setSpeed(260);
-newCar.setSpeed('qwe');
-console.log(newCar.setSpeed(-210));
+// newCar.setSpeed(210);
+// newCar.setSpeed(260);
+// newCar.setSpeed('qwe');
+// console.log(newCar.setSpeed(-210));
+
+console.log(newCar.setSpeed(100), newCar.accelerate(50));
 
 
 
