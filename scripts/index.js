@@ -13,8 +13,10 @@ class Person {
 class Weapon {
     constructor(damage){
         this.damage = damage;
+    }
 
-
+    getHitDamage() {
+        return this.damage;
     }
 }
 
@@ -29,8 +31,12 @@ class Character extends Person {
         return super.isAlive() && this.strength > 0;
     }
 
-    attack(target, power) {
-        let hitPointsAfterAttack = target.hitPoints - power;
+    attack(target, defaultHitDamage) {
+        let hitPointsAfterAttack = target.hitPoints - defaultHitDamage;
+        if (this.weapon instanceof Weapon) {
+            hitPointsAfterAttack = target.hitPoints - this.weapon.getHitDamage();
+        }
+
         if (target instanceof Character) {
             if (hitPointsAfterAttack < 0) {
                hitPointsAfterAttack = 0;
@@ -80,7 +86,7 @@ villain.setWeapon(axe);
 
 while (hero.isAlive()) {
     console.log(hero);
-    villain.attack(hero, 20);
+    villain.attack(hero, 2);
     console.log('After attack', hero);
 }
 
