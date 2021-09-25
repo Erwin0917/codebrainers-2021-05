@@ -15,7 +15,8 @@ class Person {
 }
 
 class Weapon {
-    constructor(minDamage, maxDamage, reqStrength){
+    constructor(name, minDamage, maxDamage, reqStrength){
+        this.name = name;
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
         this.reqStrength = reqStrength;
@@ -58,9 +59,11 @@ class Character extends Person {
     }
 
     setWeapon(weapon) {
-        if (weapon instanceof Weapon && this.strength >= weapon.reqStrength) {
+        const isCarriable = this.strength >= weapon.reqStrength;
+        if (weapon instanceof Weapon && isCarriable) {
             this.weapon = weapon;
         }
+        return isCarriable;
     }
 
     setHitPoints(hitpoints) {
@@ -83,31 +86,37 @@ class Villain extends Character {
         this.strength = 40;
     }
 }
-
+const weaponNames = ['Scourge', 'Deathbringer', 'Blade of Darkness', 'Soul Eater', 'Bloodbath', 'Scarlet Delirium', 'Perpetual Gloom', 'Nightfall', 'Doomsday', 'Final Reckoning', 'Bleak Eradicator', 'Dread Devourer', 'Hideous Dissector', 'Timeless Twilight', 'Gruesome Carnage', 'Shadow of Death', 'Chaos Conqueror', 'Vicious Catastrophe', 'Frostreaper', 'Foul Mutilator', 'Havocfang', 'Widowmaker', 'Gravedigger', 'Searing Vengeance', 'Grim Despair', 'Ceaseless Torment', 'Executioner', 'Neckchopper', 'Bonesplitter', 'Bane of Existence', 'Viper\'s Bite', 'Eviscerator', 'Merciless Fate', 'Heartsnatcher', 'Worldbreaker\'s Woe', 'Sanguine Thirst', 'Justifier', 'Demented Rampage', 'Great Destroyer', 'Claw of Calamity', 'Decimation', 'Despicable Onslaught', 'Fleshrender', 'Godslayer', 'Shatterskull', 'Crimson Cyclone', 'Blackrazor', 'Unholy Ruin', 'Spirit Crusher', 'Cataclysm', 'Joykiller', 'Facesmasher', 'Baleful Misery', 'Harvester of Sorrow', 'Infernal Rapture', 'Terrorfist', 'Warmonger', 'Decapitator', 'Skinripper', 'Herald of Madness', 'Dire Genocide', 'Eternal Punishment', 'Butcher\'s Blight', 'Immortal Agony', 'Loathsome Harbinger', 'Fatal Void', 'Limb Eliminator', 'Life Drainer', 'Plaguetooth', 'Neverending Dismemberment', 'Undying Cruelty', 'Gutslicer', 'Corpse Tyrant', 'Wounds of Sin', 'Heretic\'s Prophecy', 'Rotpiercer', 'Inevitable Decay', 'Armageddon', 'Hategrinder', 'Withering Sanity']
 const weapons = [];
 
 function generateWeapon() {
-    return new Weapon(getRandomNumberFromRange(3, 10), getRandomNumberFromRange(40, 60), getRandomNumberFromRange(0, 50));
-};
 
+        const name = weaponNames[getRandomNumberFromRange(0,weaponNames.length - 1)];
+        weaponNames.splice(weaponNames.indexOf(name),1);
+
+        return new Weapon(name,getRandomNumberFromRange(3, 10), getRandomNumberFromRange(40, 60), getRandomNumberFromRange(30, 70));
+}
 for (let i = 1; i <= 15; i++) {
+
     weapons.push(generateWeapon());
 }
 
-console.log(weapons);
-
 const villain = new Villain();
 const hero = new Hero();
+while (hero.weapon === null){
 
-const axe = new Weapon(7, 15, 5);
-const knife = new Weapon(7, 10, 10);
+    const isCarriable = hero.setWeapon(weapons[getRandomNumberFromRange(0,weapons.length - 1)]);
+    console.log(isCarriable);
 
-//console.log(villain);
-// hero.attack(villain, 30);
-// console.log('After attack', villain);
-villain.setWeapon(axe);
-hero.setWeapon(knife);
+}
+while (villain.weapon === null) {
+    const isCarriable = villain.setWeapon(weapons[getRandomNumberFromRange(0, weapons.length - 1)]);
+    console.log(isCarriable);
 
+}
+
+console.log(hero);
+console.log(villain);
 function attack(attacker, target, attackerName, targetName){
     if (attacker.isAlive()) {
         console.log(attackerName, ' attacks: ');
@@ -124,7 +133,4 @@ function duel(attacker, target, attackerName, targetName){
     attack(target, attacker, targetName, attackerName);
 }
 
-// while (hero.isAlive() && villain.isAlive()) {
-//     duel(hero, villain, 'Hero', 'Villain');
-// }
 
