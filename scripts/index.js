@@ -53,7 +53,8 @@ class Character extends Person {
     }
 
     setWeapon(weapon) {
-        if (this.weapon instanceof Weapon) {
+
+        if (weapon instanceof Weapon) {
             this.weapon = weapon;
         }
 
@@ -89,27 +90,32 @@ const hero = new Hero();
 const axe = new Weapon(7, 15);
 const knife = new Weapon(7, 10);
 
-console.log(villain);
+//console.log(villain);
 // hero.attack(villain, 30);
 // console.log('After attack', villain);
 villain.setWeapon(axe);
 hero.setWeapon(knife);
 
+function attack(attacker, target, attackerName, targetName){
+
+
+    if (attacker.isAlive()) {
+        console.log(attackerName, ' attacks: ');
+        attacker.attack(target, 2);
+        console.log(targetName, ' after ', attackerName, '\'s attack: ', target.hitPoints);
+        if(!target.isAlive()){
+            console.log(targetName, 'is dead');
+        }
+    }
+
+
+}
+function duel(attacker, target, attackerName, targetName){
+    attack(attacker, target, attackerName, targetName);
+    attack(target, attacker, targetName, attackerName);
+}
 
 while (hero.isAlive() && villain.isAlive()) {
-    console.log('---------------------------------------------------');
-    console.log('Villain attack: ');
-
-    if (villain.isAlive()) {
-        villain.attack(hero, 2);
-    }
-    console.log('Hero after villain attack: ', hero.hitPoints);
-
-
-    console.log('Hero attack: ');
-    if (hero.isAlive()) {
-        hero.attack(villain, 2);
-    }
-    console.log('Villain after Hero attack: ', villain.hitPoints);
+    duel(hero, villain, 'Hero', 'Villain');
 }
 
