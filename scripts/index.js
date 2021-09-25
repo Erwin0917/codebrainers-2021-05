@@ -10,6 +10,14 @@ class Person {
 
 }
 
+class Weapon {
+    constructor(damage){
+        this.damage = damage;
+
+
+    }
+}
+
 class Character extends Person {
     constructor() {
         super();
@@ -32,7 +40,11 @@ class Character extends Person {
         return target.hitPoints
     }
 
-    setHitPoints(hitpoints){
+    setWeapon(weapon) {
+        this.weapon = weapon;
+    }
+
+    setHitPoints(hitpoints) {
         this.hitPoints = hitpoints;
     }
 }
@@ -54,12 +66,17 @@ class Villain extends Character {
 }
 
 
+
+
 const villain = new Villain();
 const hero = new Hero();
 
+const axe = new Weapon(15);
+
 console.log(villain);
-hero.attack(villain, 30);
-console.log('After attack', villain);
+// hero.attack(villain, 30);
+// console.log('After attack', villain);
+villain.setWeapon(axe);
 
 while (hero.isAlive()) {
     console.log(hero);
