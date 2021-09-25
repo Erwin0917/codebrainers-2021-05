@@ -11,12 +11,13 @@ class Person {
 }
 
 class Weapon {
-    constructor(damage){
-        this.damage = damage;
+    constructor(minDamage, maxDamage){
+        this.minDamage = minDamage;
+        this.maxDamage = maxDamage;
     }
 
     getHitDamage() {
-        return this.damage;
+        return Math.floor(Math.random() * (this.maxDamage - this.minDamage + 1) + this.minDamage);
     }
 }
 
@@ -25,6 +26,7 @@ class Character extends Person {
         super();
         this.hitPoints = 50;
         this.strength = 20;
+        this.weapon = null;
     }
 
     isAlive() {
@@ -32,9 +34,13 @@ class Character extends Person {
     }
 
     attack(target, defaultHitDamage) {
+        if (!this.isAlive()){
+            throw Error('Character not alive, cannot attack again');
+        }
         let hitPointsAfterAttack = target.hitPoints - defaultHitDamage;
-        if (this.weapon instanceof Weapon) {
-            hitPointsAfterAttack = target.hitPoints - this.weapon.getHitDamage();
+        if (this.weapon !== null) {
+            const hitDamage = this.weapon.getHitDamage();
+            hitPointsAfterAttack = target.hitPoints - hitDamage;
         }
 
         if (target instanceof Character) {
@@ -47,7 +53,10 @@ class Character extends Person {
     }
 
     setWeapon(weapon) {
-        this.weapon = weapon;
+        if (this.weapon instanceof Weapon) {
+            this.weapon = weapon;
+        }
+
     }
 
     setHitPoints(hitpoints) {
@@ -66,7 +75,7 @@ class Hero extends Character {
 class Villain extends Character {
     constructor() {
         super();
-        this.hitPoints = 30;
+        this.hitPoints = 100;
         this.strength = 10;
     }
 }
@@ -77,16 +86,30 @@ class Villain extends Character {
 const villain = new Villain();
 const hero = new Hero();
 
-const axe = new Weapon(15);
+const axe = new Weapon(7, 15);
+const knife = new Weapon(7, 10);
 
 console.log(villain);
 // hero.attack(villain, 30);
 // console.log('After attack', villain);
 villain.setWeapon(axe);
+hero.setWeapon(knife);
 
-while (hero.isAlive()) {
-    console.log(hero);
-    villain.attack(hero, 2);
-    console.log('After attack', hero);
+
+while (hero.isAlive() && villain.isAlive()) {
+    console.log('---------------------------------------------------');
+    console.log('Villain attack: ');
+
+    if (villain.isAlive()) {
+        villain.attack(hero, 2);
+    }
+    console.log('Hero after villain attack: ', hero.hitPoints);
+
+
+    console.log('Hero attack: ');
+    if (hero.isAlive()) {
+        hero.attack(villain, 2);
+    }
+    console.log('Villain after Hero attack: ', villain.hitPoints);
 }
 
