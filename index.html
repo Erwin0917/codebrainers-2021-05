@@ -26,7 +26,7 @@
     <div class="arena">
         <div class="team__wrapper">
             <div class="nes-container with-title is-centered">
-                <p class="title">Hero's team</p>
+                <p class="title">Heroes team</p>
 
                 <div class="character nes-container">
                     <h2 class="name">Name</h2>
@@ -74,7 +74,7 @@
 
         <div class="team__wrapper">
             <div class="nes-container with-title is-centered">
-                <p class="title">Villain's team</p>
+                <p class="title">Villains team</p>
 
                 <div class="character nes-container">
                     <h2 class="name">Name</h2>
@@ -114,6 +114,7 @@
                         <p>Strength:  <span class="nes-text is-success">20</span></p>
                         <p>HitPoints: <span class="nes-text is-error">150</span></p>
                     </div>
+
                     <progress class="nes-progress is-error" value="150" max="150"></progress>
                 </div>
             </div>
@@ -142,9 +143,20 @@
             </div>
         </div>
 
+        <label for="default_select">Select Team</label>
+        <div class="nes-select">
+          <select required id="default_select">
+            <option value="" disabled selected hidden>Select...</option>
+            <option value="0">Heroes team</option>
+            <option value="1">Villains team</option>
+          </select>
+        </div>
+         <span class="nes-text is-error">You have to select the team</span>
+        <div>
+            <button type="button" class="nes-btn is-warning">Random data</button>
+            <button type="button" class="nes-btn is-primary">Add Character</button>
+        </div>
 
-        <button type="button" class="nes-btn is-warning">Random data</button>
-        <button type="button" class="nes-btn is-primary">Add Character</button>
     </div>
     <script type="module" src="./scripts/index.js"></script>
 </body>
