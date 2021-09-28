@@ -33,15 +33,14 @@ for (let i = 1; i <= 15; i++) {
     weapons.push(generateWeapon());
 }
 
-const villain = new Villain();
-const hero = new Hero();
-while (hero.weapon === null) {
-    hero.setWeapon(weapons[getRandomNumberFromRange(0, weapons.length - 1)]);
-}
 
-while (villain.weapon === null) {
-    villain.setWeapon(weapons[getRandomNumberFromRange(0, weapons.length - 1)]);
-}
+// while (hero.weapon === null) {
+//     hero.setWeapon(weapons[getRandomNumberFromRange(0, weapons.length - 1)]);
+// }
+//
+// while (villain.weapon === null) {
+//     villain.setWeapon(weapons[getRandomNumberFromRange(0, weapons.length - 1)]);
+// }
 
 function attack(attacker, target, attackerName, targetName) {
     if (attacker.isAlive()) {
@@ -63,41 +62,58 @@ function duel(attacker, target, attackerName, targetName) {
 //     duel(hero, villain, 'Hero', 'Villain');
 // }
 
+fetch(`https://rickandmortyapi.com/api/character/${getRandomNumberFromRange(1, 670)}`).then(response => response.json()).then(createCharacter);
 
+function createCharacter(data) {
+    // const villain = new Villain();
+    const hero = new Hero();
+    hero.name = data.name;
+    hero.imageSrc = data.image;
+    console.log(hero);
 
-const myPromise = new Promise((resolve, reject) => {
-
-
-  setTimeout(() => {
-    resolve('Inside Promise');
-  }, 3000);
-
-  reject()
-
-});
-
-
-
-async function any(value) {
-    const response = await Fetch.api
-
-
+    const img = document.createElement("img");
+    img.src = data.image;
+    const body = document.querySelector('body');
+    body.appendChild(img);
 }
 
-const time1 = setTimeout(any, 1000);
-
-const time = setInterval(any, 1000);
-
-clearInterval(time);
-
-clearTimeout(time1);
 
 
-myPromise.then( value => {
-    console.log(value);
-    return value + 2
-}).then(any).catch()
-
-console.log('After Promise');
+//
+//
+// const myPromise = new Promise((resolve, reject) => {
+//
+//
+//   setTimeout(() => {
+//     resolve('Inside Promise');
+//   }, 3000);
+//
+//   reject()
+//
+// });
+//
+//
+//
+// async function any(value) {
+//     const response = await Fetch.api
+//
+//
+// }
+//
+// const time1 = setTimeout(any, 1000);
+//
+// const time = setInterval(any, 1000);
+//
+// clearInterval(time);
+//
+// clearTimeout(time1);
+//
+//
+// myPromise.then( value => {
+//     console.log(value);
+//     return value + 2
+// }).then(any).catch()
+//
+// console.log('After Promise');
 
 

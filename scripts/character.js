@@ -2,6 +2,8 @@ import { Weapon } from './weapon.js';
 
 class Person {
     constructor() {
+        this.name = '';
+        this.imageSrc = '';
         this.hitPoints = 0;
         this.strength = 0;
     }
