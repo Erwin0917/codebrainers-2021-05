@@ -59,7 +59,45 @@ function duel(attacker, target, attackerName, targetName) {
     attack(target, attacker, targetName, attackerName);
 }
 
-while (hero.isAlive() && villain.isAlive()) {
-    duel(hero, villain, 'Hero', 'Villain');
+// while (hero.isAlive() && villain.isAlive()) {
+//     duel(hero, villain, 'Hero', 'Villain');
+// }
+
+
+
+const myPromise = new Promise((resolve, reject) => {
+
+
+  setTimeout(() => {
+    resolve('Inside Promise');
+  }, 3000);
+
+  reject()
+
+});
+
+
+
+async function any(value) {
+    const response = await Fetch.api
+
+
 }
+
+const time1 = setTimeout(any, 1000);
+
+const time = setInterval(any, 1000);
+
+clearInterval(time);
+
+clearTimeout(time1);
+
+
+myPromise.then( value => {
+    console.log(value);
+    return value + 2
+}).then(any).catch()
+
+console.log('After Promise');
+
 
