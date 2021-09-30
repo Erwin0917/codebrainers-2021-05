@@ -15,8 +15,9 @@ class Person {
 }
 
 export class Character extends Person {
-    constructor() {
+    constructor(name) {
         super();
+        this.name = name;
         this.hitPoints = 50;
         this.strength = 20;
         this.weapon = null;
@@ -56,3 +57,40 @@ export class Character extends Person {
         this.hitPoints = hitpoints;
     }
 }
+
+export function createHtmlCharacter(character) {
+    console.log(character);
+
+    if (character instanceof Character) {
+        const characterContainer = document.createElement('div');
+        characterContainer.classList.add('character', 'nes-container');
+
+        characterContainer.innerHTML = `
+                <h2 class="name">${character.name}</h2>
+                <div class="avatar__wrapper">
+                <img class="avatar" src="${character.imageSrc}" alt="hero-avatar">
+                </div>
+                <div class="details__wrapper">
+                <p>Weapon: <span class="nes-text is-warning">${character.weapon}</span></p>
+                <p>Strength: <span class="nes-text is-success">${character.strength}</span></p>
+                <p>HitPoints: <span class="nes-text is-error">${character.hitPoints}</span></p>
+                </div>
+                <progress class="nes-progress is-error" value="${character.hitPoints}" max="${character.hitPoints}"></progress>
+        `;
+
+        // const characterHitpoints = document.createElement('progress');
+        // characterHitpoints.classList.add('character', 'nes-container');
+        //
+        // characterHitpoints.value = '150';
+        // characterHitpoints.max = '150';
+        //
+        // characterContainer.appendChild(characterHitpoints);
+
+
+        return characterContainer;
+    }
+    return null;
+}
+
+
+

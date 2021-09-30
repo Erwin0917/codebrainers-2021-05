@@ -1,18 +1,18 @@
-import { Character } from './character.js';
+import {Character, createHtmlCharacter} from './character.js';
 import { getRandomNumberFromRange } from './utilis.js';
 import { Weapon } from './weapon.js';
 
 class Hero extends Character {
-    constructor() {
-        super();
+    constructor(name) {
+        super(name);
         this.hitPoints = 150;
         this.strength = 50;
     }
 }
 
 class Villain extends Character {
-    constructor() {
-        super();
+    constructor(name) {
+        super(name);
         this.hitPoints = 100;
         this.strength = 40;
     }
@@ -66,16 +66,17 @@ fetch(`https://rickandmortyapi.com/api/character/${getRandomNumberFromRange(1, 6
 
 function createCharacter(data) {
     // const villain = new Villain();
-    const hero = new Hero();
-    hero.name = data.name;
+    console.log(data);
+    const hero = new Hero(data.name);
     hero.imageSrc = data.image;
-    console.log(hero);
+    const htmlElement = createHtmlCharacter(hero);
+    const heroTeam = document.getElementById('hero-team');
+    heroTeam.appendChild(htmlElement);
 
-    const img = document.createElement("img");
-    img.src = data.image;
-    const body = document.querySelector('body');
-    body.appendChild(img);
+    console.log(hero);
 }
+
+
 
 
 
