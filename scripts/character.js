@@ -45,11 +45,13 @@ export class Character extends Person {
 
     setWeapon(weapon) {
         const isCarriable = this.strength >= weapon.reqStrength;
+        console.log((isCarriable));
         if (weapon instanceof Weapon && isCarriable) {
             this.weapon = weapon;
         }
         return isCarriable;
     }
+
     setName(name) {
         this.name = name;
     }
@@ -62,10 +64,15 @@ export class Character extends Person {
         this.image = image;
     }
 
-    setHitPoints(hitpoints) {
-        this.hitPoints = hitpoints;
+    setHitPoints(hitPoints) {
+        this.hitPoints = hitPoints;
+    }
+
+    setHtmlElement(htmlElement) {
+        this.htmlElement = htmlElement;
     }
 }
+
 export class Hero extends Character {
     constructor() {
         super();
@@ -82,19 +89,22 @@ export class Villain extends Character {
     }
 }
 export function createHtmlCharacter(character) {
-    console.log(character);
 
     if (character instanceof Character) {
         const characterContainer = document.createElement('div');
         characterContainer.classList.add('character', 'nes-container');
 
+        if (character.weapon === undefined) {
+            debugger;
+        }
+
         characterContainer.innerHTML = `
                 <h2 class="name">${character.name}</h2>
                 <div class="avatar__wrapper">
-                <img class="avatar" src="${character.imageSrc}" alt="hero-avatar">
+                <img class="avatar" src="${character.image}" alt="hero-avatar">
                 </div>
                 <div class="details__wrapper">
-                <p>Weapon: <span class="nes-text is-warning">${character.weapon}</span></p>
+                <p>Weapon: <span class="nes-text is-warning">${character.weapon.name}</span></p>
                 <p>Strength: <span class="nes-text is-success">${character.strength}</span></p>
                 <p>HitPoints: <span class="nes-text is-error">${character.hitPoints}</span></p>
                 </div>
