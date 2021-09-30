@@ -3,7 +3,7 @@ import { Weapon } from './weapon.js';
 class Person {
     constructor() {
         this.name = '';
-        this.imageSrc = '';
+        this.image = '';
         this.hitPoints = 0;
         this.strength = 0;
     }
@@ -15,12 +15,10 @@ class Person {
 }
 
 export class Character extends Person {
-    constructor(name) {
+    constructor() {
         super();
-        this.name = name;
         this.hitPoints = 50;
         this.strength = 20;
-        this.weapon = null;
     }
 
     isAlive() {
@@ -52,12 +50,37 @@ export class Character extends Person {
         }
         return isCarriable;
     }
+    setName(name) {
+        this.name = name;
+    }
+
+    setType(type) {
+        this.type = type;
+    }
+
+    setImage(image) {
+        this.image = image;
+    }
 
     setHitPoints(hitpoints) {
         this.hitPoints = hitpoints;
     }
 }
+export class Hero extends Character {
+    constructor() {
+        super();
+        this.hitPoints = 150;
+        this.strength = 50;
+    }
+}
 
+export class Villain extends Character {
+    constructor() {
+        super();
+        this.hitPoints = 100;
+        this.strength = 40;
+    }
+}
 export function createHtmlCharacter(character) {
     console.log(character);
 
@@ -78,13 +101,6 @@ export function createHtmlCharacter(character) {
                 <progress class="nes-progress is-error" value="${character.hitPoints}" max="${character.hitPoints}"></progress>
         `;
 
-        // const characterHitpoints = document.createElement('progress');
-        // characterHitpoints.classList.add('character', 'nes-container');
-        //
-        // characterHitpoints.value = '150';
-        // characterHitpoints.max = '150';
-        //
-        // characterContainer.appendChild(characterHitpoints);
 
 
         return characterContainer;
