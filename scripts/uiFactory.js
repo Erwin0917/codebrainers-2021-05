@@ -1,3 +1,7 @@
+import {generateWeapon} from "./weapon.js";
+import {getRandomNumberFromRange} from "./utilis.js";
+import {getDataForCharacter} from "./index.js";
+
 export class UiFactory {
     constructor() {
         this.pickTeam = document.querySelector('#default_select')
@@ -13,4 +17,30 @@ export class UiFactory {
         this.nameTooShortError = document.querySelector('#too-short-name-error');
         this.weaponNameTooShortError = document.querySelector('#too-short-weapon-name-error');
     }
+
+    clearErrorMessages() {
+        this.takenNameError.style.display = 'none';
+        this.weaponError.style.display = 'none';
+        this.nameError.style.display = 'none';
+        this.pickTeamError.style.display = 'none';
+        this.nameTooShortError.style.display = 'none';
+        this.weaponNameTooShortError.style.display = 'none';
+    }
+
+    async refreshInputFields() {
+        const randomName = await getDataForCharacter();
+        this.nameField.value = randomName.name;
+        this.weaponField.value = generateWeapon().name;
+        this.strengthField.value = getRandomNumberFromRange(30, 60);
+        this.hitpointsField.value = getRandomNumberFromRange(100, 150)
+    }
+
+    validField(field, errorOutput) {
+        if (field.value === '') {
+            errorOutput.style.display = 'block';
+            return false;
+        }
+        return true;
+    }
+
 }

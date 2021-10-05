@@ -38,33 +38,7 @@ function duel(attacker, target, attackerName, targetName) {
 //     duel(hero, villain, 'Hero', 'Villain');
 // }
 
-let isLoading = false;
-
-function clearErrorMessages() {
-    takenNameError.style.display = 'none';
-
-    weaponError.style.display = 'none';
-
-    nameError.style.display = 'none';
-
-    pickTeamError.style.display = 'none';
-
-    nameTooShortError.style.display = 'none';
-
-    weaponNameTooShortError.style.display = 'none';
-}
-
-async function refreshInputFields() {
-    const randomName = await getDataForCharacter();
-    nameField.value = randomName.name;
-    weaponField.value = generateWeapon().name;
-    strengthField.value = getRandomNumberFromRange(30, 60);
-    hitpointsField.value = getRandomNumberFromRange(100, 150)
-}
-
 async function createCharacterByInputData() {
-    isLoading = true;
-
     const createdCharacterData = await getDataForCharacter();
 
     const createdCharacter = createCharacterByUserData(createdCharacterData);
@@ -75,44 +49,48 @@ async function createCharacterByInputData() {
 
 if (document.getElementById('add-character').clicked = true) {
 
-    if (pickTeam.value === '') {
-        const pickTeamError = document.querySelector('#select-team-error');
-        pickTeamError.style.display = 'block';
-    } else if (pickTeam.value === '0' && heroes.length === 5) {
+    // if (pickTeam.value === '') {
+    //     const pickTeamError = document.querySelector('#select-team-error');
+    //     pickTeamError.style.display = 'block';
+    // }
+
+    const fieldCorrect = uiPanel.validField(uiPanel.pickTeam, uiPanel.pickTeamError);
+
+    if (fieldCorrect && uiPanel.pickTeam.value === 'teamHero' && heroes.length === 5) {
         alert('Team Hero is full, delete a character or pick another team')
-    } else if (pickTeam.value === '1' && villains.length === 5) {
+    } else if (fieldCorrect && uiPanel.pickTeam.value === 'teamVillain' && villains.length === 5) {
         alert('Team Villain is full, delete a character or pick another team')
     }
 
     if (heroes.length === 5) {
         document.querySelector('#teamHero').setAttribute('disabled', '');
-        pickTeam.value = '1';
+        uiPanel.pickTeam.value = 'teamVillain';
     } else if (villains.length === 5) {
         document.querySelector('#teamVillain').setAttribute('disabled', '');
-        pickTeam.value = '0';
+        uiPanel.pickTeam.value = 'teamHero';
     }
 
-    if (nameField.value === '') {
-        nameError.style.display = 'block';
-    } else if (nameField.value.length < 3) {
-    nameTooShortError.style.display = 'block';
+    if (uiPanel.nameField.value === '') {
+        uiPanel.nameError.style.display = 'block';
+    } else if (uiPanel.nameField.value.length < 3) {
+    uiPanel.nameTooShortError.style.display = 'block';
     }
 
-    if (weaponField.value === '') {
-        weaponError.style.display = 'block';
-    } else if (weaponField.value.length < 3) {
-    weaponNameTooShortError.style.display = 'block';
+    if (uiPanel.weaponField.value === '') {
+        uiPanel.weaponError.style.display = 'block';
+    } else if (uiPanel.weaponField.value.length < 3) {
+        uiPanel.weaponNameTooShortError.style.display = 'block';
     }
 
-    if (characters.some(e => e.name === nameField.value)) {
-        takenNameError.style.display = 'block';
+    if (characters.some(e => e.name === uiPanel.nameField.value)) {
+        uiPanel.takenNameError.style.display = 'block';
     }
 
     else {
 
-        if (pickTeam.value !== '' && nameField.value !== '' && weaponField.value !== '' && nameField.value.length > 3 && weaponField.value.length > 3) {
+        if (uiPanel.pickTeam.value !== '' && uiPanel.nameField.value !== '' && uiPanel.weaponField.value !== '' && uiPanel.nameField.value.length > 3 && uiPanel.weaponField.value.length > 3) {
 
-            if (pickTeam.value === '0' && heroes.length < 5) {
+            if (uiPanel.pickTeam.value === 'teamHero' && heroes.length < 5) {
                 const heroTeam = document.getElementById('hero-team');
                 heroTeam.appendChild(htmlCreatedCharacterElement);
                 createdCharacter.id = `hero${characters.length}`;
@@ -121,12 +99,12 @@ if (document.getElementById('add-character').clicked = true) {
 
                 // deleteOption();
 
-                clearErrorMessages();
+                uiPanel.clearErrorMessages();
 
-                await refreshInputFields();
+                await uiPanel.refreshInputFields();
             }
 
-            if (pickTeam.value === '1' && villains.length < 5) {
+            if (uiPanel.pickTeam.value === 'teamVillain' && villains.length < 5) {
                 const villainTeam = document.getElementById('villain-team');
                 villainTeam.appendChild(htmlCreatedCharacterElement);
                 createdCharacter.id = `villain${characters.length}`;
@@ -135,18 +113,17 @@ if (document.getElementById('add-character').clicked = true) {
 
                 // deleteOption();
 
-                clearErrorMessages();
+                uiPanel.clearErrorMessages();
 
-                await refreshInputFields();
+                await uiPanel.refreshInputFields();
         }
         }
     }
     }
 };
 
-isLoading = false;
 
-async function getDataForCharacter() {
+export async function getDataForCharacter() {
     const response = await fetch(`https://rickandmortyapi.com/api/character/${getRandomNumberFromRange(1, 670)}`);
     return response.json();
 }
@@ -157,12 +134,12 @@ function createCharacterByUserData(data) {
     createdCharacter.setImage(data.image);
     console.log(createdCharacter);
 
-    createdCharacter.setName(nameField.value);
+    createdCharacter.setName(uiPanel.nameField.value);
     const newWeapon = generateWeapon();
     createdCharacter.setWeapon(newWeapon);
-    newWeapon.name = weaponField.value;
-    createdCharacter.setHitPoints(hitpointsField.value);
-    createdCharacter.setStrength(strengthField.value);
+    newWeapon.name = uiPanel.weaponField.value;
+    createdCharacter.setHitPoints(uiPanel.hitpointsField.value);
+    createdCharacter.setStrength(uiPanel.strengthField.value);
 
     return createdCharacter;
 }
@@ -176,36 +153,36 @@ async function createCharacterByRandomData(data){
     // createdCharacter.setImage(data.image);
 
     const randomName = await getDataForCharacter();
-    nameField.value = randomName.name;
+    uiPanel.nameField.value = randomName.name;
 
     const randomWeapon = generateWeapon()
-    weaponField.value = randomWeapon.name;
+    uiPanel.weaponField.value = randomWeapon.name;
     console.log(randomWeapon);
 
-    strengthField.value = getRandomNumberFromRange(30, 60);
+    uiPanel.strengthField.value = getRandomNumberFromRange(30, 60);
 
-    hitpointsField.value = getRandomNumberFromRange(100, 150);
+    uiPanel.hitpointsField.value = getRandomNumberFromRange(100, 150);
 
-    await refreshInputFields();
+    await uiPanel.refreshInputFields();
 
 }
 
 async function randomizeName() {
     const randomName = await getDataForCharacter();
-    nameField.value = randomName.name;
+    uiPanel.nameField.value = randomName.name;
 }
 
 async function randomizeWeapon() {
     const randomWeapon = generateWeapon()
-    weaponField.value = randomWeapon.name;
+    uiPanel.weaponField.value = randomWeapon.name;
 }
 
 async function randomizeStrength() {
-    strengthField.value = getRandomNumberFromRange(30, 60);
+    uiPanel.strengthField.value = getRandomNumberFromRange(30, 60);
 }
 
 async function randomizeHitpoints() {
-    hitpointsField.value = getRandomNumberFromRange(100, 150);
+    uiPanel.hitpointsField.value = getRandomNumberFromRange(100, 150);
 }
 
 // function deleteCharacter() {
@@ -235,11 +212,9 @@ async function randomizeHitpoints() {
 
 const addCharacterButton = document.querySelector('#add-character');
 addCharacterButton.addEventListener('click', createCharacterByInputData);
-addCharacterButton.disabled = isLoading;
 
 const randomCharacterButton = document.querySelector('#random-character');
 randomCharacterButton.addEventListener('click', createCharacterByRandomData);
-randomCharacterButton.disabled = isLoading;
 
 const randomName = document.querySelector('#random-name');
 randomName.addEventListener('click', randomizeName);
