@@ -41,23 +41,40 @@
     <div class="ui__wrapper nes-container">
         <div class="ui__inputs">
             <div class="nes-field">
-              <label for="1">Name</label>
-              <input type="text" id="1" class="nes-input">
+              <label for="name">Name</label>
+                <div class="name">
+              <input type="text" id="name" class="nes-input">
+                    <button type="button" class="random" id="random-name">R</button>
+                    </div>
+                <span class="nes-text is-error" id="name-error" maxlength="15">Name your character</span>
+                <span class="nes-text is-error" id="taken-name-error">Character name is already taken</span>
+                <span class="nes-text is-error" id="too-short-name-error">Name is too short</span>
             </div>
 
             <div class="nes-field">
-              <label for="2">Weapon</label>
-              <input type="text" id="2" class="nes-input">
+              <label for="weapon">Weapon</label>
+                <div class = weapon>
+              <input type="text" id="weapon" class="nes-input" maxlength="15">
+                <span class="nes-text is-error" id="weapon-error">Insert weapon name</span>
+                    <span class="nes-text is-error" id="too-short-weapon-name-error">Weapon name is too short</span>
+                    <button type="button" class="random" id="random-weapon">R</button>
             </div>
+                </div>
 
             <div class="nes-field">
-              <label for="3">Strength</label>
-              <input type="text" id="3" class="nes-input">
+              <label for="strength">Strength</label>
+                <div class = 'strength'>
+              <input type="text" id="strength" class="nes-input" readonly="readonly">
+                    <button type="button" class="random" id="random-strength">R</button>
             </div>
+                </div>
 
             <div class="nes-field">
-              <label for="4">HitPoints</label>
-              <input type="text" id="4" class="nes-input">
+              <label for="hitpoints">HitPoints</label>
+                <div class = 'hitpoints'>
+              <input type="text" id="hitpoints" class="nes-input" readonly="readonly">
+                    <button type="button" class="random" id="random-hitpoints">R</button>
+                </div>
             </div>
         </div>
 
@@ -65,13 +82,13 @@
         <div class="nes-select">
           <select required id="default_select">
             <option value="" disabled selected hidden>Select...</option>
-            <option value="0">Heroes team</option>
-            <option value="1">Villains team</option>
+            <option value="0" id="teamHero">Heroes team</option>
+            <option value="1" id="teamVillain">Villains team</option>
           </select>
         </div>
-         <span class="nes-text is-error">You have to select the team</span>
+         <span class="nes-text is-error" id="select-team-error">You have to select the team</span>
         <div>
-            <button type="button" class="nes-btn is-warning">Random data</button>
+            <button type="button" class="nes-btn is-warning" id="random-character">Random data</button>
             <button type="button" class="nes-btn is-primary" id="add-character">Add Character</button>
         </div>
 

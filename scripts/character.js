@@ -1,4 +1,5 @@
-import { Weapon } from './weapon.js';
+import {generateWeapon, Weapon} from './weapon.js';
+import {getRandomNumberFromRange} from "./utilis.js";
 
 class Person {
     constructor() {
@@ -14,7 +15,7 @@ class Person {
 
 }
 
-export class Character extends Person {
+class Character extends Person {
     constructor() {
         super();
         this.hitPoints = 50;
@@ -45,10 +46,12 @@ export class Character extends Person {
 
     setWeapon(weapon) {
         const isCarriable = this.strength >= weapon.reqStrength;
-        console.log((isCarriable));
+        console.log(isCarriable);
+
         if (weapon instanceof Weapon && isCarriable) {
             this.weapon = weapon;
         }
+
         return isCarriable;
     }
 
@@ -68,6 +71,10 @@ export class Character extends Person {
         this.hitPoints = hitPoints;
     }
 
+    setStrength(strength) {
+        this.strength = strength;
+    }
+
     setHtmlElement(htmlElement) {
         this.htmlElement = htmlElement;
     }
@@ -76,8 +83,8 @@ export class Character extends Person {
 export class Hero extends Character {
     constructor() {
         super();
-        this.hitPoints = 150;
-        this.strength = 50;
+        this.hitPoints = getRandomNumberFromRange(100, 150);
+        this.strength = getRandomNumberFromRange(30, 60);
     }
 }
 
@@ -88,33 +95,36 @@ export class Villain extends Character {
         this.strength = 40;
     }
 }
+
 export function createHtmlCharacter(character) {
 
     if (character instanceof Character) {
         const characterContainer = document.createElement('div');
         characterContainer.classList.add('character', 'nes-container');
 
-        if (character.weapon === undefined) {
-            debugger;
-        }
+        // if (character.weapon === undefined) {
+        //     debugger;
+        // }
 
         characterContainer.innerHTML = `
-                <h2 class="name">${character.name}</h2>
+                <h2 class="name" id="char-name">${document.querySelector('#name').value}</h2>
+                <button type="button" class="delete-char" id="delete-char">X</button>
                 <div class="avatar__wrapper">
                 <img class="avatar" src="${character.image}" alt="hero-avatar">
                 </div>
                 <div class="details__wrapper">
-                <p>Weapon: <span class="nes-text is-warning">${character.weapon.name}</span></p>
-                <p>Strength: <span class="nes-text is-success">${character.strength}</span></p>
-                <p>HitPoints: <span class="nes-text is-error">${character.hitPoints}</span></p>
+
+                <p>Weapon: <span class="nes-text is-warning">${document.querySelector('#weapon').value}</span></p>
+                <p>Strength: <span class="nes-text is-success">${document.querySelector('#strength').value}</span></p>
+                <p>HitPoints: <span class="nes-text is-error">${document.querySelector('#hitpoints').value}</span></p>
+                
                 </div>
                 <progress class="nes-progress is-error" value="${character.hitPoints}" max="${character.hitPoints}"></progress>
         `;
 
-
-
         return characterContainer;
     }
+
     return null;
 }
 
