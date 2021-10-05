@@ -4,20 +4,12 @@ import {generateWeapon} from "./weapon.js";
 import {UiFactory} from "./uiFactory.js";
 import {GameBoard} from "./gameBoard.js";
 
-const uiPanel = new UiFactory();
+
 const gameBoard = new GameBoard();
+const uiPanel = new UiFactory(gameBoard);
 
-window.onload = async function() {
-    const defaultName = await getDataForCharacter();
-    uiPanel.nameField.value = defaultName.name;
-    uiPanel.weaponField.value = generateWeapon().name;
-    uiPanel.strengthField.value = getRandomNumberFromRange(30, 60);
-    uiPanel.hitpointsField.value = getRandomNumberFromRange(100, 150);
-}
 
-const characters = [];
-const heroes = [];
-const villains = [];
+uiPanel.fillInputsByRandomData();
 
 function attack(attacker, target, attackerName, targetName) {
     if (attacker.isAlive()) {
@@ -35,10 +27,6 @@ function duel(attacker, target, attackerName, targetName) {
     attack(target, attacker, targetName, attackerName);
 }
 
-// while (hero.isAlive() && villain.isAlive()) {
-//     duel(hero, villain, 'Hero', 'Villain');
-// }
-
 async function createCharacterByInputData() {
     const createdCharacterData = await getDataForCharacter();
 
@@ -50,23 +38,18 @@ async function createCharacterByInputData() {
 
 if (document.getElementById('add-character').clicked = true) {
 
-    // if (pickTeam.value === '') {
-    //     const pickTeamError = document.querySelector('#select-team-error');
-    //     pickTeamError.style.display = 'block';
-    // }
-
     const pickTeamFieldCorrect = uiPanel.validField(uiPanel.pickTeam, uiPanel.pickTeamError);
 
-    if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamHero' && heroes.length === 5) {
+    if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamHero' && gameBoard.heroes.length === 5) {
         alert('Team Hero is full, delete a character or pick another team')
-    } else if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamVillain' && villains.length === 5) {
+    } else if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamVillain' && gameBoard.villains.length === 5) {
         alert('Team Villain is full, delete a character or pick another team')
     }
 
-    if (heroes.length === 5) {
+    if (gameBoard.heroes.length === 5) {
         document.querySelector('#teamHero').setAttribute('disabled', '');
         uiPanel.pickTeam.value = 'teamVillain';
-    } else if (villains.length === 5) {
+    } else if (gameBoard.villains.length === 5) {
         document.querySelector('#teamVillain').setAttribute('disabled', '');
         uiPanel.pickTeam.value = 'teamHero';
     }
@@ -87,7 +70,7 @@ if (document.getElementById('add-character').clicked = true) {
 
     const weaponFieldCorrect = uiPanel.validField(uiPanel.weaponField, uiPanel.weaponError, 3);
 
-    if (characters.some(character => character.name === uiPanel.nameField.value)) {
+    if (gameBoard.characters.some(character => character.name === uiPanel.nameField.value)) {
         uiPanel.takenNameError.style.display = 'block';
     }
 
@@ -95,12 +78,12 @@ if (document.getElementById('add-character').clicked = true) {
 
         if (pickTeamFieldCorrect && nameFieldCorrect && weaponFieldCorrect) {
 
-            if (uiPanel.pickTeam.value === 'teamHero' && heroes.length < 5) {
+            if (uiPanel.pickTeam.value === 'teamHero' && gameBoard.heroes.length < 5) {
                 const heroTeam = document.getElementById('hero-team');
                 heroTeam.appendChild(htmlCreatedCharacterElement);
-                createdCharacter.id = `hero${characters.length}`;
-                heroes.push(createdCharacter);
-                characters.push(createdCharacter);
+                createdCharacter.id = `hero${gameBoard.characters.length}`;
+                gameBoard.heroes.push(createdCharacter);
+                gameBoard.characters.push(createdCharacter);
 
                 // deleteOption();
 
@@ -109,12 +92,12 @@ if (document.getElementById('add-character').clicked = true) {
                 await uiPanel.refreshInputFields();
             }
 
-            if (uiPanel.pickTeam.value === 'teamVillain' && villains.length < 5) {
+            if (uiPanel.pickTeam.value === 'teamVillain' && gameBoard.villains.length < 5) {
                 const villainTeam = document.getElementById('villain-team');
                 villainTeam.appendChild(htmlCreatedCharacterElement);
-                createdCharacter.id = `villain${characters.length}`;
-                villains.push(createdCharacter);
-                characters.push(createdCharacter);
+                createdCharacter.id = `villain${gameBoard.characters.length}`;
+                gameBoard.villains.push(createdCharacter);
+                gameBoard.characters.push(createdCharacter);
 
                 // deleteOption();
 
@@ -209,7 +192,7 @@ async function randomizeHitpoints() {
 //
 // function deleteOption() {
 //     const deleteChar = document.querySelector('#delete-char');
-//     deleteChar.id = `delete-char${characters.length-1}`;
+//     deleteChar.id = `delete-char${gameBoard.characters.length-1}`;
 //     console.log(deleteChar);
 //
 //     deleteChar.addEventListener('click', deleteCharacter);

@@ -3,7 +3,7 @@ import {getRandomNumberFromRange} from "./utilis.js";
 import {getDataForCharacter} from "./index.js";
 
 export class UiFactory {
-    constructor() {
+    constructor(gameBoard) {
         this.pickTeam = document.querySelector('#default_select')
         this.nameField = document.querySelector('#name');
         this.weaponField = document.querySelector('#weapon');
@@ -16,6 +16,25 @@ export class UiFactory {
         this.pickTeamError = document.querySelector('#select-team-error');
         this.nameTooShortError = document.querySelector('#too-short-name-error');
         this.weaponNameTooShortError = document.querySelector('#too-short-weapon-name-error');
+
+        this.addCharacterButton = document.getElementById('add-character');
+
+        this.rawCharacterData = null;
+
+        this.gameBoard = gameBoard;
+
+        this.initEventListeners();
+    }
+
+    initEventListeners(){
+        this.addCharacterButton.addEventListener('click', this.onAddCharacterHandler);
+
+    }
+    //Odczytanie danych z getRawCharacterData i sttworzenie konkretnej postaci
+    // na podstawie tych danych (np 'new Hero')
+    //Dodannie postaci do gameboardów
+    onAddCharacterHandler(){
+        const pickTeamFieldCorrect = uiPanel.validField(uiPanel.pickTeam, uiPanel.pickTeamError);
     }
 
     clearErrorMessages() {
@@ -27,8 +46,8 @@ export class UiFactory {
         this.weaponNameTooShortError.style.display = 'none';
     }
 
-    async refreshInputFields() {
-        const randomName = await getDataForCharacter();
+    async fillInputsByRandomData() {
+        //const randomName = await getDataForCharacter();
         this.nameField.value = randomName.name;
         this.weaponField.value = generateWeapon().name;
         this.strengthField.value = getRandomNumberFromRange(30, 60);
@@ -43,4 +62,13 @@ export class UiFactory {
         }
         return true;
     }
+    //Stwórz obiekt z danymi które zostaną przekazane do inputów
+    // (obiekt a nie konkretna instancja klasy 'character')
+    getRandomCharacterData(){
+
+        //this.rawCharacterData = this.getRandomCharacterData();
+
+    }
+
+
 }
