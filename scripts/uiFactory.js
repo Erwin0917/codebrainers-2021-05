@@ -35,12 +35,12 @@ export class UiFactory {
         this.hitpointsField.value = getRandomNumberFromRange(100, 150)
     }
 
-    validField(field, errorOutput) {
-        if (field.value === '') {
+    validField(field, errorOutput, minValueLength) {
+        const inputValue = field.value.trim()
+        if (inputValue === '' || inputValue.length < minValueLength) {
             errorOutput.style.display = 'block';
             return false;
         }
         return true;
     }
-
 }

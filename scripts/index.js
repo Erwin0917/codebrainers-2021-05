@@ -2,8 +2,10 @@ import {Hero, Villain, createHtmlCharacter} from './character.js';
 import { getRandomNumberFromRange } from './utilis.js';
 import {generateWeapon} from "./weapon.js";
 import {UiFactory} from "./uiFactory.js";
+import {GameBoard} from "./gameBoard.js";
 
 const uiPanel = new UiFactory();
+const gameBoard = new GameBoard();
 
 window.onload = async function() {
     const defaultName = await getDataForCharacter();
@@ -12,7 +14,6 @@ window.onload = async function() {
     uiPanel.strengthField.value = getRandomNumberFromRange(30, 60);
     uiPanel.hitpointsField.value = getRandomNumberFromRange(100, 150);
 }
-
 
 const characters = [];
 const heroes = [];
@@ -54,11 +55,11 @@ if (document.getElementById('add-character').clicked = true) {
     //     pickTeamError.style.display = 'block';
     // }
 
-    const fieldCorrect = uiPanel.validField(uiPanel.pickTeam, uiPanel.pickTeamError);
+    const pickTeamFieldCorrect = uiPanel.validField(uiPanel.pickTeam, uiPanel.pickTeamError);
 
-    if (fieldCorrect && uiPanel.pickTeam.value === 'teamHero' && heroes.length === 5) {
+    if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamHero' && heroes.length === 5) {
         alert('Team Hero is full, delete a character or pick another team')
-    } else if (fieldCorrect && uiPanel.pickTeam.value === 'teamVillain' && villains.length === 5) {
+    } else if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamVillain' && villains.length === 5) {
         alert('Team Villain is full, delete a character or pick another team')
     }
 
@@ -70,25 +71,29 @@ if (document.getElementById('add-character').clicked = true) {
         uiPanel.pickTeam.value = 'teamHero';
     }
 
-    if (uiPanel.nameField.value === '') {
-        uiPanel.nameError.style.display = 'block';
-    } else if (uiPanel.nameField.value.length < 3) {
-    uiPanel.nameTooShortError.style.display = 'block';
-    }
+    // if (uiPanel.nameField.value === '') {
+    //     uiPanel.nameError.style.display = 'block';
+    // } else if (uiPanel.nameField.value.length < 3) {
+    // uiPanel.nameTooShortError.style.display = 'block';
+    // }
 
-    if (uiPanel.weaponField.value === '') {
-        uiPanel.weaponError.style.display = 'block';
-    } else if (uiPanel.weaponField.value.length < 3) {
-        uiPanel.weaponNameTooShortError.style.display = 'block';
-    }
+    const nameFieldCorrect = uiPanel.validField(uiPanel.nameField, uiPanel.nameError, 3);
 
-    if (characters.some(e => e.name === uiPanel.nameField.value)) {
+    // if (uiPanel.weaponField.value === '') {
+    //     uiPanel.weaponError.style.display = 'block';
+    // } else if (uiPanel.weaponField.value.length < 3) {
+    //     uiPanel.weaponNameTooShortError.style.display = 'block';
+    // }
+
+    const weaponFieldCorrect = uiPanel.validField(uiPanel.weaponField, uiPanel.weaponError, 3);
+
+    if (characters.some(character => character.name === uiPanel.nameField.value)) {
         uiPanel.takenNameError.style.display = 'block';
     }
 
     else {
 
-        if (uiPanel.pickTeam.value !== '' && uiPanel.nameField.value !== '' && uiPanel.weaponField.value !== '' && uiPanel.nameField.value.length > 3 && uiPanel.weaponField.value.length > 3) {
+        if (pickTeamFieldCorrect && nameFieldCorrect && weaponFieldCorrect) {
 
             if (uiPanel.pickTeam.value === 'teamHero' && heroes.length < 5) {
                 const heroTeam = document.getElementById('hero-team');
@@ -146,7 +151,7 @@ function createCharacterByUserData(data) {
 
 async function createCharacterByRandomData(data){
 
-    clearErrorMessages();
+    uiPanel.clearErrorMessages();
 
     // const createdCharacter = new Hero();
     // createdCharacter.setType(data.type);
