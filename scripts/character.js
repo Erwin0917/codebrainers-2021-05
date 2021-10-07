@@ -21,13 +21,17 @@ class Person {
 }
 
 export class Character extends Person {
+
     constructor(name, hitPoints, strength, weapon, img) {
         super();
+        this.id = Math.random().toString(36).substr(2, 9);
         this.setHitPoints(hitPoints);
         this.setStrength(strength);
         this.setImage(img);
         this.setName(name);
         this.setWeapon(weapon);
+
+        this.onRemove = null;
     }
 
     isAlive() {
@@ -53,8 +57,12 @@ export class Character extends Person {
     }
 
     setWeapon(weapon) {
-        const isCarriable = this.strength >= weapon.reqStrength;
-        console.log(isCarriable);
+        let isCarriable = this.strength >= weapon.reqStrength;
+
+        while (isCarriable === false) {
+            const newWeapon = generateWeapon();
+            isCarriable = this.strength >= newWeapon.reqStrength;
+        }
 
         if (weapon instanceof Weapon && isCarriable) {
             this.weapon = weapon;
@@ -83,24 +91,47 @@ export class Character extends Person {
         this.strength = strength;
     }
 
-    setHtmlElement(htmlElement) {
+    setHtmlElement = (htmlElement) => {
         this.htmlElement = htmlElement;
+
+        const delButton = this.htmlElement.querySelector('#delete-char');
+        if (this.onRemove !== null) {
+            delButton.addEventListener('click', () => this.onRemove(this));
+        }
+
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export class Hero extends Character {
     constructor(name, hitPoints, strength, weapon, img) {
         super(name, hitPoints, strength, weapon, img);
-        // this.hitPoints = getRandomNumberFromRange(100, 150);
-        // this.strength = getRandomNumberFromRange(30, 60);
+
     }
 }
 
 export class Villain extends Character {
     constructor(ame, hitPoints, strength, weapon, img) {
         super(name, hitPoints, strength, weapon, img);
-        // this.hitPoints = 100;
-        // this.strength = 40;
+
     }
 }
 
@@ -112,16 +143,16 @@ export function createHtmlCharacter(character) {
 
 
         characterContainer.innerHTML = `
-                <h2 class="name" id="char-name">${document.querySelector('#name').value}</h2>
+                <h2 class="name" id="char-name">${character.name}</h2>
                 <button type="button" class="delete-char" id="delete-char">X</button>
                 <div class="avatar__wrapper">
                 <img class="avatar" src="${character.image}" alt="hero-avatar">
                 </div>
                 <div class="details__wrapper">
 
-                <p>Weapon: <span class="nes-text is-warning">${document.querySelector('#weapon').value}</span></p>
-                <p>Strength: <span class="nes-text is-success">${document.querySelector('#strength').value}</span></p>
-                <p>HitPoints: <span class="nes-text is-error">${document.querySelector('#hitpoints').value}</span></p>
+                <p>Weapon: <span class="nes-text is-warning">${character.weapon.name}</span></p>
+                <p>Strength: <span class="nes-text is-success">${character.strength}</span></p>
+                <p>HitPoints: <span class="nes-text is-error">${character.hitPoints}</span></p>
                 
                 </div>
                 <progress class="nes-progress is-error" value="${character.hitPoints}" max="${character.hitPoints}"></progress>

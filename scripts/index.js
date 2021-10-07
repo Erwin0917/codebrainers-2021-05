@@ -1,23 +1,24 @@
-import {Hero, Villain, createHtmlCharacter} from './character.js';
-import { getRandomNumberFromRange } from './utilis.js';
-import {generateWeapon} from "./weapon.js";
 import {UiFactory} from "./uiFactory.js";
 import {GameBoard} from "./gameBoard.js";
 
 
-
-
 async function runGame() {
     const gameBoard = new GameBoard();
-    const uiPanel = new UiFactory(gameBoard);
+    const uiPanel = new UiFactory();
 
-    await uiPanel.randomCharacterData()
-    uiPanel.fillInputsByRandomData();
+    await uiPanel.randomCharacterData();
+    uiPanel.fillInputsByRawCharacterData();
 
     document.getElementById('add-character').addEventListener('click', () => uiPanel.onAddCharacterHandlerToBoard(gameBoard));
 }
 
 runGame();
+
+
+
+
+
+
 
 function attack(attacker, target, attackerName, targetName) {
     if (attacker.isAlive()) {
@@ -37,65 +38,8 @@ function duel(attacker, target, attackerName, targetName) {
 
 
 
-async function randomizeName() {
-    const randomName = await getCharacterFromRickAndMortyApi();
-    uiPanel.nameField.value = randomName.name;
-}
-
-async function randomizeWeapon() {
-    const randomWeapon = generateWeapon()
-    uiPanel.weaponField.value = randomWeapon.name;
-}
-
-async function randomizeStrength() {
-    uiPanel.strengthField.value = getRandomNumberFromRange(30, 60);
-}
-
-async function randomizeHitpoints() {
-    uiPanel.hitpointsField.value = getRandomNumberFromRange(100, 150);
-}
-
-// function deleteCharacter() {
-//     let OnEvent = (document) => {
-//     return {
-//         on: (event, className, callback) => {
-//             document.addEventListener('click', (event)=>{
-//                 if(!event.target.classList.contains(className)) return;
-//                 callback.call(event.target, event);
-//             }, false);
-//         }
-//     }
-// };
-//
-// OnEvent(document).on('click', 'delete-char', function (e) {
-//     console.log(this.id.slice('7'));
-// });
-// }
-//
-// function deleteOption() {
-//     const deleteChar = document.querySelector('#delete-char');
-//     deleteChar.id = `delete-char${gameBoard.characters.length-1}`;
-//     console.log(deleteChar);
-//
-//     deleteChar.addEventListener('click', deleteCharacter);
-// }
-
-// const addCharacterButton = document.querySelector('#add-character');
-// addCharacterButton.addEventListener('click', createCharacterByInputData);
 
 
-
-const randomName = document.querySelector('#random-name');
-randomName.addEventListener('click', randomizeName);
-
-const randomWeapon = document.querySelector('#random-weapon');
-randomWeapon.addEventListener('click', randomizeWeapon);
-
-const randomStrength = document.querySelector('#random-strength');
-randomStrength.addEventListener('click', randomizeStrength);
-
-const randomHitpoints = document.querySelector('#random-hitpoints');
-randomHitpoints.addEventListener('click', randomizeHitpoints);
 
 // 1. don't change weapon attributes if random and then add (or add, error, add) (generate weapon attributes at random or at add?)
 // 2. if shown, no name errors disappear after you input a name of min. 3 chars

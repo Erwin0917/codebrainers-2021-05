@@ -4,6 +4,8 @@ import { getCharacterFromRickAndMortyApi, Hero, Villain } from './character.js';
 import { GameBoard } from './gameBoard.js';
 
 export class UiFactory {
+    rawCharacterData = null;
+
     constructor() {
         this.pickTeam = document.querySelector('#default_select')
         this.nameField = document.querySelector('#name');
@@ -19,32 +21,36 @@ export class UiFactory {
         this.weaponNameTooShortError = document.querySelector('#too-short-weapon-name-error');
 
         this.randomCharacterButton = document.querySelector('#random-character');
+        this.randomName = document.querySelector('#random-name');
+        this.randomWeapon = document.querySelector('#random-weapon');
+        this.randomStrength = document.querySelector('#random-strength');
+        this.randomHitpoints = document.querySelector('#random-hitpoints');
 
-
-        this.rawCharacterData = null;
 
         this.initEventListeners();
     }
 
     initEventListeners(){
         this.randomCharacterButton.addEventListener('click', this.onRandomCharacterHandler);
-
+        this.randomName.addEventListener('click', this.randomizeName);
+        this.randomWeapon.addEventListener('click', this.randomizeWeapon);
+        this.randomStrength.addEventListener('click', this.randomizeStrength);
+        this.randomHitpoints.addEventListener('click', this.randomizeHitpoints);
     }
-    //Odczytanie danych z getRawCharacterData i sttworzenie konkretnej postaci
-    // na podstawie tych danych (np 'new Hero')
-    //Dodannie postaci do gameboardów
+
     onAddCharacterHandlerToBoard = (board) => {
         if (board instanceof GameBoard === false) {
             return false;
         }
-        const fieldsAreCorrect = this.validAllFields();
+        const fieldsAreCorrect = this.validAllFields(board);
+
         if (fieldsAreCorrect) {
             let character;
             if (this.pickTeam.value === 'teamHero') {
                 character = new Hero(
-                    this.rawCharacterData.name,
-                    this.rawCharacterData.hitpoints,
-                    this.rawCharacterData.strength,
+                    this.nameField.value,
+                    this.hitpointsField.value,
+                    this.strengthField.value,
                     this.rawCharacterData.weapon,
                     this.rawCharacterData.img
                 );
@@ -52,13 +58,15 @@ export class UiFactory {
 
             if (this.pickTeam.value === 'teamVillain') {
                 character = new Villain(
-                    this.rawCharacterData.name,
-                    this.rawCharacterData.hitpoints,
-                    this.rawCharacterData.strength,
+                    this.nameField.value,
+                    this.hitpointsField.value,
+                    this.strengthField.value,
                     this.rawCharacterData.weapon,
                     this.rawCharacterData.img
                 );
             }
+
+            character.weapon.name = this.weaponField.value;
 
             board.addCharacterToBoard(character);
             this.onRandomCharacterHandler();
@@ -66,11 +74,11 @@ export class UiFactory {
 
     }
 
-    validAllFields() {
+    validAllFields(board) {
         this.clearErrorMessages();
 
         const isPickTeamFieldCorrect = this.validField(this.pickTeam, this.pickTeamError);
-        const isNameFieldCorrect = this.validField(this.nameField, this.nameError, 3);
+        const isNameFieldCorrect = this.validField(this.nameField, this.nameError, 3, [...board.heroesTeam, ...board.villainsTeam]);
         const isWeaponFieldCorrect = this.validField(this.weaponField, this.weaponError, 3);
 
         return isPickTeamFieldCorrect && isNameFieldCorrect && isWeaponFieldCorrect;
@@ -78,7 +86,7 @@ export class UiFactory {
 
     onRandomCharacterHandler = async () => {
         await this.randomCharacterData();
-        this.fillInputsByRandomData();
+        this.fillInputsByRawCharacterData();
     }
 
     clearErrorMessages() {
@@ -90,23 +98,31 @@ export class UiFactory {
         this.weaponNameTooShortError.style.display = 'none';
     }
 
-    fillInputsByRandomData() {
+    fillInputsByRawCharacterData() {
         this.nameField.value = this.rawCharacterData.name;
         this.weaponField.value = this.rawCharacterData.weapon.name;
         this.strengthField.value = this.rawCharacterData.strength;
         this.hitpointsField.value = this.rawCharacterData.hitpoints;
     }
 
-    validField(field, errorOutput, minValueLength) {
+    validField(field, errorOutput, minValueLength, isUniq) {
         const inputValue = field.value.trim()
         if (inputValue === '' || inputValue.length < minValueLength) {
             errorOutput.style.display = 'block';
             return false;
         }
+
+        if (isUniq !== undefined && Array.isArray(isUniq)) {
+            const anyDub = isUniq.some( char => char.name === inputValue);
+            if (anyDub) {
+                errorOutput.style.display = 'block';
+                return false;
+            }
+        }
         return true;
     }
 
-    async randomCharacterData(){
+    async randomCharacterData() {
         const characterFromApi = await getCharacterFromRickAndMortyApi();
 
         this.rawCharacterData = {
@@ -116,8 +132,27 @@ export class UiFactory {
             strength: getRandomNumberFromRange(30, 60),
             hitpoints: getRandomNumberFromRange(100, 150)
         }
+    }
 
+    randomizeName = async () => {
+        const randomCharacter = await getCharacterFromRickAndMortyApi();
+        this.rawCharacterData.name = randomCharacter.name;
+        this.fillInputsByRawCharacterData();
+    }
 
+    randomizeWeapon = () => {
+        this.rawCharacterData.weapon = generateWeapon();
+        this.fillInputsByRawCharacterData();
+    }
+
+    randomizeStrength = () => {
+        this.rawCharacterData.strength = getRandomNumberFromRange(30, 60);
+        this.fillInputsByRawCharacterData();
+    }
+
+    randomizeHitpoints = () => {
+        this.rawCharacterData.hitpoints = getRandomNumberFromRange(100, 150);
+        this.fillInputsByRawCharacterData();
     }
 
 

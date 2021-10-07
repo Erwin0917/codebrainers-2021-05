@@ -1,7 +1,5 @@
 import { getRandomNumberFromRange } from './utilis.js';
 
-import { Hero } from './character.js';
-
 export class Weapon {
     constructor(name, minDamage, maxDamage, reqStrength) {
         this.name = name;
@@ -22,7 +20,7 @@ export function generateWeapon() {
     const name = weaponNames[getRandomNumberFromRange(0, weaponNames.length - 1)];
     weaponNames.splice(weaponNames.indexOf(name), 1);
 
-    const newWeapon = new Weapon(name, getRandomNumberFromRange(3, 10), getRandomNumberFromRange(40, 60), getRandomNumberFromRange(10, 60));
+    const newWeapon = new Weapon(name, getRandomNumberFromRange(3, 10), getRandomNumberFromRange(40, 60), getRandomNumberFromRange(20, 100));
 
     return newWeapon;
 }
