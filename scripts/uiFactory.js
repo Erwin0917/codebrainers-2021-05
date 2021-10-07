@@ -132,6 +132,8 @@ export class UiFactory {
             strength: getRandomNumberFromRange(30, 60),
             hitpoints: getRandomNumberFromRange(100, 150)
         }
+
+        this.pickTeam.value = Math.random() > 0.5 ? 'teamHero' : 'teamVillain';
     }
 
     randomizeName = async () => {
