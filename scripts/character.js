@@ -1,6 +1,11 @@
 import {generateWeapon, Weapon} from './weapon.js';
 import {getRandomNumberFromRange} from "./utilis.js";
 
+export async function getCharacterFromRickAndMortyApi() {
+    const response = await fetch(`https://rickandmortyapi.com/api/character/${getRandomNumberFromRange(1, 670)}`);
+    return response.json();
+}
+
 class Person {
     constructor() {
         this.name = '';
@@ -15,11 +20,14 @@ class Person {
 
 }
 
-class Character extends Person {
-    constructor() {
+export class Character extends Person {
+    constructor(name, hitPoints, strength, weapon, img) {
         super();
-        this.hitPoints = 50;
-        this.strength = 20;
+        this.setHitPoints(hitPoints);
+        this.setStrength(strength);
+        this.setImage(img);
+        this.setName(name);
+        this.setWeapon(weapon);
     }
 
     isAlive() {
@@ -81,18 +89,18 @@ class Character extends Person {
 }
 
 export class Hero extends Character {
-    constructor() {
-        super();
-        this.hitPoints = getRandomNumberFromRange(100, 150);
-        this.strength = getRandomNumberFromRange(30, 60);
+    constructor(name, hitPoints, strength, weapon, img) {
+        super(name, hitPoints, strength, weapon, img);
+        // this.hitPoints = getRandomNumberFromRange(100, 150);
+        // this.strength = getRandomNumberFromRange(30, 60);
     }
 }
 
 export class Villain extends Character {
-    constructor() {
-        super();
-        this.hitPoints = 100;
-        this.strength = 40;
+    constructor(ame, hitPoints, strength, weapon, img) {
+        super(name, hitPoints, strength, weapon, img);
+        // this.hitPoints = 100;
+        // this.strength = 40;
     }
 }
 
@@ -102,9 +110,6 @@ export function createHtmlCharacter(character) {
         const characterContainer = document.createElement('div');
         characterContainer.classList.add('character', 'nes-container');
 
-        // if (character.weapon === undefined) {
-        //     debugger;
-        // }
 
         characterContainer.innerHTML = `
                 <h2 class="name" id="char-name">${document.querySelector('#name').value}</h2>

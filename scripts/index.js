@@ -5,11 +5,19 @@ import {UiFactory} from "./uiFactory.js";
 import {GameBoard} from "./gameBoard.js";
 
 
-const gameBoard = new GameBoard();
-const uiPanel = new UiFactory(gameBoard);
 
 
-uiPanel.fillInputsByRandomData();
+async function runGame() {
+    const gameBoard = new GameBoard();
+    const uiPanel = new UiFactory(gameBoard);
+
+    await uiPanel.randomCharacterData()
+    uiPanel.fillInputsByRandomData();
+
+    document.getElementById('add-character').addEventListener('click', () => uiPanel.onAddCharacterHandlerToBoard(gameBoard));
+}
+
+runGame();
 
 function attack(attacker, target, attackerName, targetName) {
     if (attacker.isAlive()) {
@@ -27,136 +35,10 @@ function duel(attacker, target, attackerName, targetName) {
     attack(target, attacker, targetName, attackerName);
 }
 
-async function createCharacterByInputData() {
-    const createdCharacterData = await getDataForCharacter();
 
-    const createdCharacter = createCharacterByUserData(createdCharacterData);
-    const htmlCreatedCharacterElement = createHtmlCharacter(createdCharacter);
-    // createdCharacter.setHtmlElement(htmlCreatedCharacterElement);
-
-    console.log(createdCharacter);
-
-if (document.getElementById('add-character').clicked = true) {
-
-    const pickTeamFieldCorrect = uiPanel.validField(uiPanel.pickTeam, uiPanel.pickTeamError);
-
-    if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamHero' && gameBoard.heroes.length === 5) {
-        alert('Team Hero is full, delete a character or pick another team')
-    } else if (pickTeamFieldCorrect && uiPanel.pickTeam.value === 'teamVillain' && gameBoard.villains.length === 5) {
-        alert('Team Villain is full, delete a character or pick another team')
-    }
-
-    if (gameBoard.heroes.length === 5) {
-        document.querySelector('#teamHero').setAttribute('disabled', '');
-        uiPanel.pickTeam.value = 'teamVillain';
-    } else if (gameBoard.villains.length === 5) {
-        document.querySelector('#teamVillain').setAttribute('disabled', '');
-        uiPanel.pickTeam.value = 'teamHero';
-    }
-
-    // if (uiPanel.nameField.value === '') {
-    //     uiPanel.nameError.style.display = 'block';
-    // } else if (uiPanel.nameField.value.length < 3) {
-    // uiPanel.nameTooShortError.style.display = 'block';
-    // }
-
-    const nameFieldCorrect = uiPanel.validField(uiPanel.nameField, uiPanel.nameError, 3);
-
-    // if (uiPanel.weaponField.value === '') {
-    //     uiPanel.weaponError.style.display = 'block';
-    // } else if (uiPanel.weaponField.value.length < 3) {
-    //     uiPanel.weaponNameTooShortError.style.display = 'block';
-    // }
-
-    const weaponFieldCorrect = uiPanel.validField(uiPanel.weaponField, uiPanel.weaponError, 3);
-
-    if (gameBoard.characters.some(character => character.name === uiPanel.nameField.value)) {
-        uiPanel.takenNameError.style.display = 'block';
-    }
-
-    else {
-
-        if (pickTeamFieldCorrect && nameFieldCorrect && weaponFieldCorrect) {
-
-            if (uiPanel.pickTeam.value === 'teamHero' && gameBoard.heroes.length < 5) {
-                const heroTeam = document.getElementById('hero-team');
-                heroTeam.appendChild(htmlCreatedCharacterElement);
-                createdCharacter.id = `hero${gameBoard.characters.length}`;
-                gameBoard.heroes.push(createdCharacter);
-                gameBoard.characters.push(createdCharacter);
-
-                // deleteOption();
-
-                uiPanel.clearErrorMessages();
-
-                await uiPanel.refreshInputFields();
-            }
-
-            if (uiPanel.pickTeam.value === 'teamVillain' && gameBoard.villains.length < 5) {
-                const villainTeam = document.getElementById('villain-team');
-                villainTeam.appendChild(htmlCreatedCharacterElement);
-                createdCharacter.id = `villain${gameBoard.characters.length}`;
-                gameBoard.villains.push(createdCharacter);
-                gameBoard.characters.push(createdCharacter);
-
-                // deleteOption();
-
-                uiPanel.clearErrorMessages();
-
-                await uiPanel.refreshInputFields();
-        }
-        }
-    }
-    }
-};
-
-
-export async function getDataForCharacter() {
-    const response = await fetch(`https://rickandmortyapi.com/api/character/${getRandomNumberFromRange(1, 670)}`);
-    return response.json();
-}
-
-function createCharacterByUserData(data) {
-    const createdCharacter = new Hero();
-    createdCharacter.setType(data.type);
-    createdCharacter.setImage(data.image);
-    console.log(createdCharacter);
-
-    createdCharacter.setName(uiPanel.nameField.value);
-    const newWeapon = generateWeapon();
-    createdCharacter.setWeapon(newWeapon);
-    newWeapon.name = uiPanel.weaponField.value;
-    createdCharacter.setHitPoints(uiPanel.hitpointsField.value);
-    createdCharacter.setStrength(uiPanel.strengthField.value);
-
-    return createdCharacter;
-}
-
-async function createCharacterByRandomData(data){
-
-    uiPanel.clearErrorMessages();
-
-    // const createdCharacter = new Hero();
-    // createdCharacter.setType(data.type);
-    // createdCharacter.setImage(data.image);
-
-    const randomName = await getDataForCharacter();
-    uiPanel.nameField.value = randomName.name;
-
-    const randomWeapon = generateWeapon()
-    uiPanel.weaponField.value = randomWeapon.name;
-    console.log(randomWeapon);
-
-    uiPanel.strengthField.value = getRandomNumberFromRange(30, 60);
-
-    uiPanel.hitpointsField.value = getRandomNumberFromRange(100, 150);
-
-    await uiPanel.refreshInputFields();
-
-}
 
 async function randomizeName() {
-    const randomName = await getDataForCharacter();
+    const randomName = await getCharacterFromRickAndMortyApi();
     uiPanel.nameField.value = randomName.name;
 }
 
@@ -198,11 +80,10 @@ async function randomizeHitpoints() {
 //     deleteChar.addEventListener('click', deleteCharacter);
 // }
 
-const addCharacterButton = document.querySelector('#add-character');
-addCharacterButton.addEventListener('click', createCharacterByInputData);
+// const addCharacterButton = document.querySelector('#add-character');
+// addCharacterButton.addEventListener('click', createCharacterByInputData);
 
-const randomCharacterButton = document.querySelector('#random-character');
-randomCharacterButton.addEventListener('click', createCharacterByRandomData);
+
 
 const randomName = document.querySelector('#random-name');
 randomName.addEventListener('click', randomizeName);
