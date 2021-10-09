@@ -22,7 +22,9 @@ class Person {
 
 export class Character extends Person {
 
-    constructor(name, hitPoints, strength, weapon, img) {
+    maxHitPoints;
+
+    constructor({name, hitPoints, strength, weapon, img}) {
         super();
         this.id = Math.random().toString(36).substr(2, 9);
         this.setHitPoints(hitPoints);
@@ -32,6 +34,8 @@ export class Character extends Person {
         this.setWeapon(weapon);
 
         this.onRemove = null;
+
+        this.maxHitPoints = hitPoints;
     }
 
     isAlive() {
@@ -64,7 +68,11 @@ export class Character extends Person {
             isCarriable = this.strength >= newWeapon.reqStrength;
         }
 
-        if (weapon instanceof Weapon && isCarriable) {
+        // if (weapon instanceof Weapon && isCarriable) {
+        //     this.weapon = weapon;
+        // }
+
+        if (isCarriable) {
             this.weapon = weapon;
         }
 
@@ -104,33 +112,18 @@ export class Character extends Person {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export class Hero extends Character {
-    constructor(name, hitPoints, strength, weapon, img) {
-        super(name, hitPoints, strength, weapon, img);
+    type = 'Hero';
+    constructor({name, hitPoints, strength, weapon, img}) {
+        super({name, hitPoints, strength, weapon, img});
 
     }
 }
 
 export class Villain extends Character {
-    constructor(ame, hitPoints, strength, weapon, img) {
-        super(name, hitPoints, strength, weapon, img);
+    type = 'Villain';
+    constructor({name, hitPoints, strength, weapon, img}) {
+        super({name, hitPoints, strength, weapon, img});
 
     }
 }

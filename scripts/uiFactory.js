@@ -26,6 +26,7 @@ export class UiFactory {
         this.randomStrength = document.querySelector('#random-strength');
         this.randomHitpoints = document.querySelector('#random-hitpoints');
 
+        this.startBattleButton = document.querySelector('#start-battle');
 
         this.initEventListeners();
     }
@@ -46,25 +47,16 @@ export class UiFactory {
 
         if (fieldsAreCorrect) {
             let character;
-            if (this.pickTeam.value === 'teamHero') {
-                character = new Hero(
-                    this.nameField.value,
-                    this.hitpointsField.value,
-                    this.strengthField.value,
-                    this.rawCharacterData.weapon,
-                    this.rawCharacterData.img
-                );
+
+            const rawData = {
+                    name: this.nameField.value,
+                    hitPoints: this.hitpointsField.value,
+                    strength: this.strengthField.value,
+                    weapon: this.rawCharacterData.weapon,
+                    img: this.rawCharacterData.img
             }
 
-            if (this.pickTeam.value === 'teamVillain') {
-                character = new Villain(
-                    this.nameField.value,
-                    this.hitpointsField.value,
-                    this.strengthField.value,
-                    this.rawCharacterData.weapon,
-                    this.rawCharacterData.img
-                );
-            }
+            character = this.pickTeam.value === 'teamHero' ? new Hero(rawData) : new Villain(rawData);
 
             character.weapon.name = this.weaponField.value;
 
@@ -72,6 +64,11 @@ export class UiFactory {
             this.onRandomCharacterHandler();
         }
 
+    }
+
+    onRandomCharacterHandler = async () => {
+        await this.randomCharacterData();
+        this.fillInputsByRawCharacterData();
     }
 
     validAllFields(board) {
@@ -82,11 +79,6 @@ export class UiFactory {
         const isWeaponFieldCorrect = this.validField(this.weaponField, this.weaponError, 3);
 
         return isPickTeamFieldCorrect && isNameFieldCorrect && isWeaponFieldCorrect;
-    }
-
-    onRandomCharacterHandler = async () => {
-        await this.randomCharacterData();
-        this.fillInputsByRawCharacterData();
     }
 
     clearErrorMessages() {
@@ -156,6 +148,7 @@ export class UiFactory {
         this.rawCharacterData.hitpoints = getRandomNumberFromRange(100, 150);
         this.fillInputsByRawCharacterData();
     }
+
 
 
 }

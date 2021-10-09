@@ -1,4 +1,4 @@
-import { Character, createHtmlCharacter, Hero, Villain } from './character.js';
+import {Character, createHtmlCharacter, Hero, Villain} from './character.js';
 
 export class GameBoard {
     maxTeamLength = 5;
@@ -12,13 +12,39 @@ export class GameBoard {
         this.villainTeamHtmlWrapper = document.getElementById('villain-team');
     }
 
+    readStorage() {
+        const charactersFromLocalStorage = JSON.parse(localStorage.getItem('characters'));
+
+        if (charactersFromLocalStorage === null) {
+            return;
+        }
+
+        if (Array.isArray(charactersFromLocalStorage)) {
+            charactersFromLocalStorage.forEach(character => {
+                let newCharacter = {
+                    name: character.name,
+                    hitPoints: character.hitPoints,
+                    strength: character.strength,
+                    weapon: character.weapon,
+                    img: character.image
+                };
+                character.type === 'Hero' ? this.addCharacterToBoard(new Hero(newCharacter)) : this.addCharacterToBoard(new Villain(newCharacter));
+
+            })
+        }
+
+    }
+
     addCharacterToBoard(character) {
+
         if (character instanceof Character === false) {
             alert('The person is not instance of Character class');
             return false;
         }
 
         character.onRemove = this.removeCharacterFromBoard;
+
+        const localStorage = window.localStorage;
 
         if (character instanceof Hero) {
 
@@ -27,27 +53,29 @@ export class GameBoard {
                 return false;
             }
             this.heroesTeam.push(character);
-
         }
 
         if (character instanceof Villain) {
             if (this.villainsTeam >= this.maxTeamLength) {
                 alert('Team Villain is full, delete a character or pick another team')
-                return  false;
+                return false;
             }
             this.villainsTeam.push(character);
         }
-        this.renderCharacters();
-    }
 
+        this.renderCharacters();
+
+        localStorage.setItem('characters', JSON.stringify([...this.heroesTeam, ...this.villainsTeam]))
+        return true;
+    }
 
     removeCharacterFromBoard = (character) => {
         if (character instanceof Hero) {
-            this.heroesTeam = this.heroesTeam.filter( hero => hero.id !== character.id);
+            this.heroesTeam = this.heroesTeam.filter(hero => hero.id !== character.id);
         }
 
         if (character instanceof Villain) {
-            this.villainsTeam = this.villainsTeam.filter( hero => hero.id !== character.id);
+            this.villainsTeam = this.villainsTeam.filter(hero => hero.id !== character.id);
         }
 
         this.renderCharacters();
@@ -55,20 +83,52 @@ export class GameBoard {
 
     renderCharacters = () => {
         this.heroTeamHtmlWrapper.innerHTML = '';
-        this.heroesTeam.forEach( character => {
+        this.heroesTeam.forEach(character => {
             const htmlCharacter = createHtmlCharacter(character);
             this.heroTeamHtmlWrapper.appendChild(htmlCharacter);
             character.setHtmlElement(htmlCharacter);
 
         });
         this.villainTeamHtmlWrapper.innerHTML = '';
-        this.villainsTeam.forEach( character => {
+        this.villainsTeam.forEach(character => {
             const htmlCharacter = createHtmlCharacter(character);
             this.villainTeamHtmlWrapper.appendChild(htmlCharacter);
             character.setHtmlElement(htmlCharacter);
         });
     }
 
+    startGame = () => {
+        if (this.validBoard() === false) {
+            console.log('Board validation failed')
+            return;
+        }
 
+        this.heroesTeam.forEach((hero, index) => {
+            const villain = this.villainsTeam[index];
+            this.duel(hero, villain, hero.name, villain.name);
+
+            this.renderCharacters();
+        })
+    }
+
+    validBoard() {
+        return this.heroesTeam.length === this.villainsTeam.length;
+    }
+
+    attack(attacker, target, attackerName, targetName) {
+            if (attacker.isAlive()) {
+                console.log(attackerName, ' attacks: ');
+                attacker.attack(target, 2);
+                console.log(`${targetName} after ${attackerName}'attack ${target.hitPoints}`);
+                if (!target.isAlive()) {
+                    console.log(targetName, 'is dead');
+                }
+            }
+        }
+
+    duel(attacker, target, attackerName, targetName) {
+            this.attack(attacker, target, attackerName, targetName);
+            this.attack(target, attacker, targetName, attackerName);
+        }
 
 }

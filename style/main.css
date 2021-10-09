@@ -97,3 +97,9 @@
 .nes-text.is-warning {
     color: #007bbd;
 }
+
+#start-battle {
+    margin-bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
