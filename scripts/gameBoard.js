@@ -1,4 +1,5 @@
 import {Character, createHtmlCharacter, Hero, Villain} from './character.js';
+import {Weapon} from "./weapon.js";
 
 export class GameBoard {
     maxTeamLength = 5;
@@ -21,11 +22,18 @@ export class GameBoard {
 
         if (Array.isArray(charactersFromLocalStorage)) {
             charactersFromLocalStorage.forEach(character => {
-                let newCharacter = {
+                const newWeapon = new Weapon(
+                    character.weapon.name,
+                    character.weapon.minDamage,
+                    character.weapon.maxDamage,
+                    character.weapon.reqStrength
+                );
+
+                const newCharacter = {
                     name: character.name,
                     hitPoints: character.hitPoints,
                     strength: character.strength,
-                    weapon: character.weapon,
+                    weapon: newWeapon,
                     img: character.image
                 };
                 character.type === 'Hero' ? this.addCharacterToBoard(new Hero(newCharacter)) : this.addCharacterToBoard(new Villain(newCharacter));
@@ -33,6 +41,11 @@ export class GameBoard {
             })
         }
 
+    }
+
+    isTeamAlive(team){
+
+        return team.some(character => character.isAlive());
     }
 
     addCharacterToBoard(character) {
@@ -97,25 +110,35 @@ export class GameBoard {
         });
     }
 
-    startGame = () => {
+    startGame = async () => {
         if (this.validBoard() === false) {
             console.log('Board validation failed')
             return;
         }
 
-        this.heroesTeam.forEach((hero, index) => {
-            const villain = this.villainsTeam[index];
-            this.duel(hero, villain, hero.name, villain.name);
+        let i = 0;
 
-            this.renderCharacters();
-        })
+
+        while (this.isTeamAlive(this.villainsTeam) && this.isTeamAlive(this.heroesTeam)) {
+            this.task(i);
+            await timeOut;
+            i++;
+        }
     }
-
+    task(i){
+            console.log('battle');
+            this.heroesTeam.forEach((hero, index) => {
+                console.log('battle123');
+                const villain = this.villainsTeam[index];
+                this.duel(hero, villain, hero.name, villain.name);
+                this.renderCharacters();
+            })
+    }
     validBoard() {
         return this.heroesTeam.length === this.villainsTeam.length;
     }
 
-    attack(attacker, target, attackerName, targetName) {
+    attack = (attacker, target, attackerName, targetName) => {
             if (attacker.isAlive()) {
                 console.log(attackerName, ' attacks: ');
                 attacker.attack(target, 2);
@@ -126,9 +149,12 @@ export class GameBoard {
             }
         }
 
-    duel(attacker, target, attackerName, targetName) {
+    duel = (attacker, target, attackerName, targetName) => {
             this.attack(attacker, target, attackerName, targetName);
             this.attack(target, attacker, targetName, attackerName);
         }
-
 }
+const timeOut = new Promise(resolve => {
+    setTimeout(resolve, 200);
+
+});

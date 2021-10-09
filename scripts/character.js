@@ -46,7 +46,7 @@ export class Character extends Person {
         if (!this.isAlive()) {
             throw Error('Character not alive, cannot attack again');
         }
-        const damageFactor = Math.round(this.strength * 0.2);
+        const damageFactor = Math.round(this.strength * 0.02);
         let hitPointsAfterAttack = this.weapon !== null ?
             target.hitPoints - this.weapon.getHitDamage() * damageFactor :
             target.hitPoints - defaultHitDamage;
@@ -148,7 +148,7 @@ export function createHtmlCharacter(character) {
                 <p>HitPoints: <span class="nes-text is-error">${character.hitPoints}</span></p>
                 
                 </div>
-                <progress class="nes-progress is-error" value="${character.hitPoints}" max="${character.hitPoints}"></progress>
+                <progress class="nes-progress is-error" value="${character.hitPoints}" max="${character.maxHitPoints}"></progress>
         `;
 
         return characterContainer;
