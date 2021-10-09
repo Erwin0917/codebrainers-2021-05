@@ -24,7 +24,7 @@ export class Character extends Person {
 
     maxHitPoints;
 
-    constructor({name, hitPoints, strength, weapon, img}) {
+    constructor({name, hitPoints, strength, weapon, img, maxHitPoints}) {
         super();
         this.id = Math.random().toString(36).substr(2, 9);
         this.setHitPoints(hitPoints);
@@ -34,8 +34,7 @@ export class Character extends Person {
         this.setWeapon(weapon);
 
         this.onRemove = null;
-
-        this.maxHitPoints = hitPoints;
+        this.maxHitPoints = maxHitPoints === undefined ? hitPoints : maxHitPoints;
     }
 
     isAlive() {
@@ -114,16 +113,16 @@ export class Character extends Person {
 
 export class Hero extends Character {
     type = 'Hero';
-    constructor({name, hitPoints, strength, weapon, img}) {
-        super({name, hitPoints, strength, weapon, img});
+    constructor({name, hitPoints, strength, weapon, img, maxHitPoints}) {
+        super({name, hitPoints, strength, weapon, img, maxHitPoints});
 
     }
 }
 
 export class Villain extends Character {
     type = 'Villain';
-    constructor({name, hitPoints, strength, weapon, img}) {
-        super({name, hitPoints, strength, weapon, img});
+    constructor({name, hitPoints, strength, weapon, img, maxHitPoints}) {
+        super({name, hitPoints, strength, weapon, img, maxHitPoints});
 
     }
 }

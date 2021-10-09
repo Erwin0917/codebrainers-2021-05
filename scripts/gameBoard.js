@@ -26,7 +26,7 @@ export class GameBoard {
                     character.weapon.name,
                     character.weapon.minDamage,
                     character.weapon.maxDamage,
-                    character.weapon.reqStrength
+                    character.weapon.reqStrength,
                 );
 
                 const newCharacter = {
@@ -34,7 +34,8 @@ export class GameBoard {
                     hitPoints: character.hitPoints,
                     strength: character.strength,
                     weapon: newWeapon,
-                    img: character.image
+                    img: character.image,
+                    maxHitPoints: character.maxHitPoints
                 };
                 character.type === 'Hero' ? this.addCharacterToBoard(new Hero(newCharacter)) : this.addCharacterToBoard(new Villain(newCharacter));
 
@@ -61,7 +62,7 @@ export class GameBoard {
 
         if (character instanceof Hero) {
 
-            if (this.heroesTeam >= this.maxTeamLength) {
+            if (this.heroesTeam.length >= this.maxTeamLength) {
                 alert('Team Hero is full, delete a character or pick another team')
                 return false;
             }
@@ -69,7 +70,7 @@ export class GameBoard {
         }
 
         if (character instanceof Villain) {
-            if (this.villainsTeam >= this.maxTeamLength) {
+            if (this.villainsTeam.length >= this.maxTeamLength) {
                 alert('Team Villain is full, delete a character or pick another team')
                 return false;
             }
@@ -91,6 +92,7 @@ export class GameBoard {
             this.villainsTeam = this.villainsTeam.filter(hero => hero.id !== character.id);
         }
 
+        localStorage.setItem('characters', JSON.stringify([...this.heroesTeam, ...this.villainsTeam]))
         this.renderCharacters();
     }
 
@@ -117,44 +119,41 @@ export class GameBoard {
         }
 
         let i = 0;
-
-
         while (this.isTeamAlive(this.villainsTeam) && this.isTeamAlive(this.heroesTeam)) {
-            this.task(i);
-            await timeOut;
+            this.heroesTeam.forEach((hero, index) => {
+
+                const villain = this.villainsTeam[index];
+                if (villain !== undefined) {
+                    this.duel(hero, villain, hero.name, villain.name);
+                    this.renderCharacters();
+                }
+            })
+
+            await timeOut(100 * i);
             i++;
         }
     }
-    task(i){
-            console.log('battle');
-            this.heroesTeam.forEach((hero, index) => {
-                console.log('battle123');
-                const villain = this.villainsTeam[index];
-                this.duel(hero, villain, hero.name, villain.name);
-                this.renderCharacters();
-            })
-    }
+
     validBoard() {
         return this.heroesTeam.length === this.villainsTeam.length;
     }
 
     attack = (attacker, target, attackerName, targetName) => {
-            if (attacker.isAlive()) {
-                console.log(attackerName, ' attacks: ');
-                attacker.attack(target, 2);
-                console.log(`${targetName} after ${attackerName}'attack ${target.hitPoints}`);
-                if (!target.isAlive()) {
-                    console.log(targetName, 'is dead');
-                }
+        if (attacker.isAlive()) {
+            attacker.attack(target, 2);
+            console.log(`${targetName} after ${attackerName}'attack ${target.hitPoints}`);
+            if (!target.isAlive()) {
+                console.log(targetName, 'is dead');
+                this.removeCharacterFromBoard(target);
             }
+        } else {
+            this.removeCharacterFromBoard(attacker)
         }
+    }
 
     duel = (attacker, target, attackerName, targetName) => {
-            this.attack(attacker, target, attackerName, targetName);
-            this.attack(target, attacker, targetName, attackerName);
-        }
+        Math.random() >= 0.5 ? this.attack(attacker, target, attackerName, targetName) : this.attack(target, attacker, targetName, attackerName);;
+    }
 }
-const timeOut = new Promise(resolve => {
-    setTimeout(resolve, 200);
 
-});
+const timeOut = async (time) => await new Promise(resolve =>  setTimeout(resolve, time));
