@@ -26,7 +26,12 @@ function Rectangle(props) {
     }
     rectangle += '+\n';
 
-    return <pre className="rectangle">{rectangle}</pre>;
+    return (
+        <div>
+            <pre className="rectangle">{rectangle}</pre>
+            <p>Area of rectangle of width {props.a} and height {props.b} is {props.a * props.b}.</p>
+        </div>
+    );
 }
 
 function App() {
