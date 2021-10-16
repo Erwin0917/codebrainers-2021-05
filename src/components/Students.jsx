@@ -7,32 +7,42 @@ class Students extends React.Component {
         super(props);
         this.state = {
             averageAge: undefined,
-            sortedStudents: []
+            sortedStudents: [],
+            sortDirection: undefined
         };
 
 
     }
+
     componentDidMount() {
         this.setState({sortedStudents: this.props.students})
     }
 
     calculateAverageAge = () => {
-        if (this.props.students.length === 0){
+        if (this.props.students.length === 0) {
             return;
         }
 
-        const sumAge = this.props.students.reduce((sum,student) => sum + student.age,this.props.students[0].age);
+        const sumAge = this.props.students.reduce((sum, student) => sum + student.age, this.props.students[0].age);
         const averageAge = sumAge / this.props.students.length;
         this.setState({averageAge: averageAge});
     }
 
-    sortStudent = (event, direction) =>{
-        console.log(event);
+    sortStudent = () => {
+        let direction = undefined;
+        if (this.state.sortDirection === undefined) {
+            direction = 'Asc';
+        } else if (this.state.sortDirection === 'Asc') {
+            direction = 'Desc';
+        } else {
+            direction = 'Asc';
+        }
+
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
             const fullName1 = studentA.fullName;
             const fullName2 = studentB.fullName;
-            if (fullName1 > fullName2)  {
+            if (fullName1 > fullName2) {
                 return direction === 'Asc' ? 1 : -1;
             } else if (fullName1 < fullName2) {
                 return direction === 'Asc' ? -1 : 1;
@@ -41,8 +51,9 @@ class Students extends React.Component {
             }
 
         });
-        this.setState({sortedStudents: sortedStudents});
+        this.setState({sortedStudents: sortedStudents, sortDirection: direction});
     }
+
     render() {
 
         return (
@@ -50,7 +61,7 @@ class Students extends React.Component {
                 <table className="studentsTable" cellPadding='0' cellSpacing='0'>
                     <thead>
                     <tr>
-                        <th>
+                        <th onClick={this.sortStudent} className="Interactive">
                             Full name
                         </th>
                         <th>
@@ -71,9 +82,9 @@ class Students extends React.Component {
                     </tbody>
 
                 </table>
-                <p><button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button></p>
-                <p><button onClick={(event)=>this.sortStudent(event, 'Asc')} className="calculate-age">Sort students Asc</button></p>
-                <p><button onClick={(event)=>this.sortStudent(event, 'Desc')} className="calculate-age">Sort students Desc</button></p>
+                <p>
+                    <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
+                </p>
                 <div>
                     <p>Average age: {this.state.averageAge}</p>
 

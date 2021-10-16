@@ -13,7 +13,9 @@
     border: 1px solid black;
     padding: 1rem;
 }
-
+.studentsTable th.Interactive{
+    cursor: pointer;
+}
 .studentsTable + .studentsTable {
     margin-top: 1rem;
 }
