@@ -4,7 +4,18 @@ import './Students.css';
 
 function Students(props) {
     const students = props.students;
+    const sortedStudents = students.sort(function (studentA, studentB) {
+        const age1 = studentA.age;
+        const age2 = studentB.age;
+        if (age1 > age2) {
+            return 1;
+        } else if (age1 < age2) {
+            return -1;
+        } else {
+            return 0;
+        }
 
+    });
     return (
         <table className="studentsTable" cellPadding='0' cellSpacing='0'>
             <thead>
@@ -23,8 +34,8 @@ function Students(props) {
             <tbody>
 
             {
-                students.map(
-                    student => <Student student={student} />
+                sortedStudents.map(
+                    student => <Student student={student}/>
                 )
             }
             </tbody>
