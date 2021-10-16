@@ -76,7 +76,7 @@ class Students extends React.Component {
 
                     {
                         this.state.sortedStudents.map(
-                            student => <Student student={student}/>
+                            (student, index) => <Student student={student} key={index} />
                         )
                     }
                     </tbody>
