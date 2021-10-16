@@ -6,7 +6,7 @@ import Student from "./components/Student";
 function App() {
     return (
         <div>
-            <table>
+            <table className="studentsTable" cellPadding='0' cellSpacing='0'>
                 <thead>
                 <tr>
                     <th>
