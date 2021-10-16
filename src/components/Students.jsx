@@ -5,11 +5,11 @@ import './Students.css';
 function Students(props) {
     const students = props.students;
     const sortedStudents = students.sort(function (studentA, studentB) {
-        const age1 = studentA.age;
-        const age2 = studentB.age;
-        if (age1 > age2) {
+        const fullName1 = studentA.fullName;
+        const fullName2 = studentB.fullName;
+        if (fullName1 > fullName2) {
             return 1;
-        } else if (age1 < age2) {
+        } else if (fullName1 < fullName2) {
             return -1;
         } else {
             return 0;

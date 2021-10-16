@@ -10,8 +10,8 @@ const codeBrainersStudents = [
 ];
 
 const otherStudents = [
-    new Student('Joanna', 36, 12),
-    new Student('Waldemar', 13, 4),
+    new Student('Gżegżółka', 36, 12),
+    new Student('名前', 13, 4),
     new Student('Jarosław', 4, 90),
     new Student('Jacek', 101, 7),
     new Student('Hermengilda', 80, 1),
