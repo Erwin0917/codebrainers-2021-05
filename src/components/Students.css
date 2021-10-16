@@ -17,3 +17,8 @@
 .studentsTable + .studentsTable {
     margin-top: 1rem;
 }
+
+.calculate-age {
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
