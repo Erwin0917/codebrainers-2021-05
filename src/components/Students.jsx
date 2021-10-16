@@ -3,6 +3,10 @@ import Student from "./Student";
 import './Students.css';
 
 class Students extends React.Component {
+    calculateAverageAge() {
+        console.log('click!');
+    }
+
     render() {
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
@@ -18,31 +22,33 @@ class Students extends React.Component {
 
         });
         return (
-            <table className="studentsTable" cellPadding='0' cellSpacing='0'>
-                <thead>
-                <tr>
-                    <th>
-                        Full name
-                    </th>
-                    <th>
-                        Age
-                    </th>
-                    <th>
-                        Number of lessons
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
+            <React.Fragment>
+                <table className="studentsTable" cellPadding='0' cellSpacing='0'>
+                    <thead>
+                    <tr>
+                        <th>
+                            Full name
+                        </th>
+                        <th>
+                            Age
+                        </th>
+                        <th>
+                            Number of lessons
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                {
-                    sortedStudents.map(
-                        student => <Student student={student}/>
-                    )
-                }
-                </tbody>
+                    {
+                        sortedStudents.map(
+                            student => <Student student={student}/>
+                        )
+                    }
+                    </tbody>
 
-            </table>
-
+                </table>
+                <p><button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button></p>
+            </React.Fragment>
         )
 
     }
