@@ -1,0 +1,19 @@
+/*
+    ' ' - descendant selector
+    '>' - child selector
+    '+' - adjacent sibling selector
+ */
+
+.studentsTable {
+    border-collapse: collapse;
+}
+
+.studentsTable td,
+.studentsTable th {
+    border: 1px solid black;
+    padding: 1rem;
+}
+
+.studentsTable + .studentsTable {
+    margin-top: 1rem;
+}
