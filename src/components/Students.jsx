@@ -3,8 +3,21 @@ import Student from "./Student";
 import './Students.css';
 
 class Students extends React.Component {
-    calculateAverageAge() {
-        console.log('click!');
+    constructor(props) {
+        super(props);
+        this.state = {
+            averageAge: undefined
+        };
+
+    }
+    calculateAverageAge = () => {
+        if (this.props.students.length === 0){
+            return;
+        }
+
+        const sumAge = this.props.students.reduce((sum,student) => sum + student.age,this.props.students[0].age);
+        const averageAge = sumAge / this.props.students.length;
+        this.setState({averageAge: averageAge});
     }
 
     render() {
@@ -48,6 +61,10 @@ class Students extends React.Component {
 
                 </table>
                 <p><button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button></p>
+                <div>
+                    <p>Average age: {this.state.averageAge}</p>
+
+                </div>
             </React.Fragment>
         )
 
