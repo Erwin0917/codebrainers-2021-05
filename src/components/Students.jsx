@@ -26,15 +26,16 @@ class Students extends React.Component {
         this.setState({averageAge: averageAge});
     }
 
-    sortStudent = () =>{
+    sortStudent = (event, direction) =>{
+        console.log(event);
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
             const fullName1 = studentA.fullName;
             const fullName2 = studentB.fullName;
-            if (fullName1 > fullName2) {
-                return 1;
+            if (fullName1 > fullName2)  {
+                return direction === 'Asc' ? 1 : -1;
             } else if (fullName1 < fullName2) {
-                return -1;
+                return direction === 'Asc' ? -1 : 1;
             } else {
                 return 0;
             }
@@ -71,7 +72,8 @@ class Students extends React.Component {
 
                 </table>
                 <p><button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button></p>
-                <p><button onClick={this.sortStudent} className="calculate-age">Sort students</button></p>
+                <p><button onClick={(event)=>this.sortStudent(event, 'Asc')} className="calculate-age">Sort students Asc</button></p>
+                <p><button onClick={(event)=>this.sortStudent(event, 'Desc')} className="calculate-age">Sort students Desc</button></p>
                 <div>
                     <p>Average age: {this.state.averageAge}</p>
 
