@@ -8,10 +8,10 @@ class Students extends React.Component {
         this.state = {
             averageAge: undefined,
             sortedStudents: [],
-            sortDirection: undefined
+            sortDirectionName: undefined,
+            sortDirectionAge: undefined,
+            sortDirectionLessons: undefined
         };
-
-
     }
 
     componentDidMount() {
@@ -28,15 +28,17 @@ class Students extends React.Component {
         this.setState({averageAge: averageAge});
     }
 
-    sortStudent = () => {
+    sortStudentByName = () => {
         let direction = undefined;
-        if (this.state.sortDirection === undefined) {
+        if (this.state.sortDirectionName === undefined) {
             direction = 'Asc';
-        } else if (this.state.sortDirection === 'Asc') {
+        } else if (this.state.sortDirectionName === 'Asc') {
             direction = 'Desc';
         } else {
             direction = 'Asc';
         }
+
+        console.log(`direction: ${direction}, state.sortDirectionName: ${this.state.sortDirectionName}`);
 
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
@@ -51,7 +53,65 @@ class Students extends React.Component {
             }
 
         });
-        this.setState({sortedStudents: sortedStudents, sortDirection: direction});
+        this.setState({sortedStudents: sortedStudents, sortDirectionName: direction});
+    }
+
+    sortStudentByAge = () => {
+        let direction = undefined;
+        if (this.state.sortDirectionAge === undefined) {
+            direction = 'Asc';
+        } else if (this.state.sortDirectionAge === 'Asc') {
+            direction = 'Desc';
+        } else {
+            direction = 'Asc';
+        }
+
+        console.log(`direction: ${direction}, state.sortDirectionAge: ${this.state.sortDirectionAge}`);
+
+        const students = this.props.students;
+        const sortedStudents = students.sort(function (studentA, studentB) {
+            const fullName1 = studentA.age;
+            const fullName2 = studentB.age;
+            if (fullName1 > fullName2) {
+                return direction === 'Asc' ? 1 : -1;
+            } else if (fullName1 < fullName2) {
+                return direction === 'Asc' ? -1 : 1;
+            } else {
+                return 0;
+            }
+
+        });
+        this.setState({sortedStudents: sortedStudents, sortDirectionAge: direction});
+
+    }
+
+    sortStudentByLessons = () => {
+        let direction = undefined;
+        if (this.state.sortDirectionLessons === undefined) {
+            direction = 'Asc';
+        } else if (this.state.sortDirectionLessons === 'Asc') {
+            direction = 'Desc';
+        } else {
+            direction = 'Asc';
+        }
+
+        console.log(`direction: ${direction}, state.sortDirectionLessons: ${this.state.sortDirectionLessons}`);
+
+        const students = this.props.students;
+        const sortedStudents = students.sort(function (studentA, studentB) {
+            const fullName1 = studentA.lessonCount;
+            const fullName2 = studentB.lessonCount;
+            if (fullName1 > fullName2) {
+                return direction === 'Asc' ? 1 : -1;
+            } else if (fullName1 < fullName2) {
+                return direction === 'Asc' ? -1 : 1;
+            } else {
+                return 0;
+            }
+
+        });
+        this.setState({sortedStudents: sortedStudents, sortDirectionLessons: direction});
+
     }
 
     render() {
@@ -61,13 +121,13 @@ class Students extends React.Component {
                 <table className="studentsTable" cellPadding='0' cellSpacing='0'>
                     <thead>
                     <tr>
-                        <th onClick={this.sortStudent} className="Interactive">
+                        <th onClick={this.sortStudentByName} className="Interactive">
                             Full name
                         </th>
-                        <th>
+                        <th onClick={this.sortStudentByAge} className="Interactive">
                             Age
                         </th>
-                        <th>
+                        <th onClick={this.sortStudentByLessons} className="Interactive">
                             Number of lessons
                         </th>
                     </tr>
@@ -76,7 +136,7 @@ class Students extends React.Component {
 
                     {
                         this.state.sortedStudents.map(
-                            (student, index) => <Student student={student} key={index} />
+                            (student, index) => <Student student={student} key={index}/>
                         )
                     }
                     </tbody>
