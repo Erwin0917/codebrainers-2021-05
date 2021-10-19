@@ -12,6 +12,9 @@ class Students extends React.Component {
             sortDirectionAge: undefined,
             sortDirectionLessons: undefined
         };
+        this.nameClickCount = 0;
+        this.ageClickCount = 0;
+        this.lessonsClickCount = 0;
     }
 
     componentDidMount() {
@@ -30,15 +33,19 @@ class Students extends React.Component {
 
     sortStudentByName = () => {
         let direction = undefined;
-        if (this.state.sortDirectionName === undefined) {
+
+        if (this.nameClickCount % 2 === 0) {
             direction = 'Asc';
-        } else if (this.state.sortDirectionName === 'Asc') {
-            direction = 'Desc';
         } else {
-            direction = 'Asc';
+            direction = 'Desc';
         }
 
-        console.log(`direction: ${direction}, state.sortDirectionName: ${this.state.sortDirectionName}`);
+        console.log(`direction: ${direction}, state.sortDirectionName: ${this.nameClickCount}`);
+
+        this.nameClickCount ++;
+        this.lessonsClickCount = 0;
+        this.ageClickCount = 0;
+
 
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
@@ -58,15 +65,18 @@ class Students extends React.Component {
 
     sortStudentByAge = () => {
         let direction = undefined;
-        if (this.state.sortDirectionAge === undefined) {
+
+        if (this.ageClickCount % 2 === 0) {
             direction = 'Asc';
-        } else if (this.state.sortDirectionAge === 'Asc') {
-            direction = 'Desc';
         } else {
-            direction = 'Asc';
+            direction = 'Desc';
         }
 
-        console.log(`direction: ${direction}, state.sortDirectionAge: ${this.state.sortDirectionAge}`);
+        console.log(`direction: ${direction}, state.sortDirectionAge: ${this.ageClickCount}`);
+
+        this.ageClickCount ++;
+        this.lessonsClickCount = 0;
+        this.nameClickCount = 0;
 
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
@@ -87,15 +97,18 @@ class Students extends React.Component {
 
     sortStudentByLessons = () => {
         let direction = undefined;
-        if (this.state.sortDirectionLessons === undefined) {
+
+        if (this.lessonsClickCount % 2 === 0) {
             direction = 'Asc';
-        } else if (this.state.sortDirectionLessons === 'Asc') {
-            direction = 'Desc';
         } else {
-            direction = 'Asc';
+            direction = 'Desc';
         }
 
-        console.log(`direction: ${direction}, state.sortDirectionLessons: ${this.state.sortDirectionLessons}`);
+        console.log(`direction: ${direction}, state.sortDirectionLessons: ${this.lessonsClickCount}`);
+
+        this.lessonsClickCount ++;
+        this.ageClickCount = 0;
+        this.nameClickCount = 0;
 
         const students = this.props.students;
         const sortedStudents = students.sort(function (studentA, studentB) {
