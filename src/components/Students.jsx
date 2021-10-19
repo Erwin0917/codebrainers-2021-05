@@ -66,6 +66,14 @@ class Students extends React.Component {
         this.setState({ sortedStudents, sortDirections });
     }
 
+        incrementLessons = () => {
+            console.log('this.state.sortedStudents:', this.state.sortedStudents);
+
+        }
+
+        decrementLessons = () => {
+
+        }
 
     render() {
 
@@ -89,7 +97,12 @@ class Students extends React.Component {
 
                     {
                         this.state.sortedStudents.map(
-                            (student, index) => <Student student={student} key={index}/>
+                            (student, index) => <Student
+                                student={student}
+                                key={index}
+                                incrementLessons={this.incrementLessons}
+                                decrementLessons={this.decrementLessons}
+                            />
                         )
                     }
                     </tbody>
