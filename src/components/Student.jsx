@@ -11,7 +11,19 @@ function Student(props) {
                 {props.student.age}
             </td>
             <td>
-                {props.student.lessonCount}
+                <div className="lessonCount">
+                    <div>
+                        {props.student.lessonCount}
+
+                    </div>
+                    <div>
+                        <button>➕</button>
+                        { ' ' }
+                        <button>➖</button>
+
+                    </div>
+
+                </div>
             </td>
 
         </tr>);

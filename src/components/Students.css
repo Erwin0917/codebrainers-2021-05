@@ -34,3 +34,9 @@
     padding: 1rem;
     margin-bottom: 1rem;
 }
+
+.lessonCount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
