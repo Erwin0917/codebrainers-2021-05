@@ -7,6 +7,13 @@ class Student{
         this.age = age;
         this.lessonCount = lessonCount;
     }
+
+    setLessonCount(lessonCount) {
+        console.log('setLessonCount', lessonCount)
+        if (lessonCount >= 0) {
+            this.lessonCount = lessonCount;
+        }
+    }
 }
 
 

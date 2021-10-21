@@ -67,15 +67,13 @@ class Students extends React.Component {
 
         setLessons = (index, isIncrease) => {
             const student = this.state.sortedStudents[index];
-
             if(isIncrease) {
                 student.lessonCount++;
             } else {
-                student.lessonCount--;
+                student.setLessonCount(student.lessonCount - 1);
+                console.log(student.lessonCount)
             }
-
             const sortedStudents = [...this.state.sortedStudents];
-
             this.setState({sortedStudents});
         }
 
