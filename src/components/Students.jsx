@@ -76,6 +76,11 @@ class Students extends React.Component {
             const sortedStudents = [...this.state.sortedStudents];
             this.setState({sortedStudents});
         }
+        removeStudent = (index) => {
+            const students = [...this.state.sortedStudents];
+            students.splice(index, 1);
+            this.setState({sortedStudents: students});
+        }
 
     render() {
 
@@ -104,6 +109,7 @@ class Students extends React.Component {
                                 key={index}
                                 index={index}
                                 setLessons={this.setLessons}
+                                removeStudent={this.removeStudent}
                             />
                         )
                     }

@@ -20,6 +20,8 @@ function Student(props) {
                         <button onClick={() => props.setLessons(props.index, true)}>➕</button>
                         { ' ' }
                         <button onClick={() => props.setLessons(props.index, false)}>➖</button>
+                        { ' ' }
+                        <button onClick={() => props.removeStudent(props.index)}>Delete</button>
                     </div>
 
                 </div>
