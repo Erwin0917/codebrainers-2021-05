@@ -65,23 +65,18 @@ class Students extends React.Component {
         this.setState({ sortedStudents, sortDirections });
     }
 
-        incrementLessons = (index) => {
+        setLessons = (index, isIncrease) => {
             const student = this.state.sortedStudents[index];
 
-            student.lessonCount++;
+            if(isIncrease) {
+                student.lessonCount++;
+            } else {
+                student.lessonCount--;
+            }
 
             const sortedStudents = [...this.state.sortedStudents];
 
-            sortedStudents[index] = student;
-
             this.setState({sortedStudents});
-
-            console.log('this.state.sortedStudents:', this.state.sortedStudents[index]);
-            console.log('index', index)
-        }
-
-        decrementLessons = (index) => {
-
         }
 
     render() {
@@ -110,8 +105,7 @@ class Students extends React.Component {
                                 student={student}
                                 key={index}
                                 index={index}
-                                incrementLessons={this.incrementLessons}
-                                decrementLessons={this.decrementLessons}
+                                setLessons={this.setLessons}
                             />
                         )
                     }

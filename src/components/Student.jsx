@@ -17,9 +17,9 @@ function Student(props) {
 
                     </div>
                     <div>
-                        <button onClick={() => props.incrementLessons(props.index)}>➕</button>
+                        <button onClick={() => props.setLessons(props.index, true)}>➕</button>
                         { ' ' }
-                        <button onClick={() => props.decrementLessons(props.index)}>➖</button>
+                        <button onClick={() => props.setLessons(props.index, false)}>➖</button>
                     </div>
 
                 </div>
