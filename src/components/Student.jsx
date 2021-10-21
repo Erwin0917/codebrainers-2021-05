@@ -1,6 +1,15 @@
 import React from 'react';
+import StudentModel from '../models/Student';
 
 function Student(props) {
+
+    console.log('Rendering student with name', props.student.fullName);
+
+    if (!(props.student instanceof StudentModel)) {
+        debugger;
+        return null;
+    }
+
     return (
         <tr>
 
@@ -18,16 +27,17 @@ function Student(props) {
                     </div>
                     <div>
                         <button onClick={() => props.setLessons(props.index, true)}>➕</button>
-                        { ' ' }
+                        {' '}
                         <button onClick={() => props.setLessons(props.index, false)}>➖</button>
-                        { ' ' }
+                        {' '}
                         <button onClick={() => props.removeStudent(props.index)}>Delete</button>
                     </div>
 
                 </div>
             </td>
 
-        </tr>);
+        </tr>
+    );
 }
 
-export default Student;
+export default React.memo(Student);

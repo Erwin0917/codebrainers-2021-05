@@ -9,13 +9,13 @@ class Students extends React.Component {
 
         this.state = {
             averageAge: undefined,
-            sortedStudents: [],
+            sortedStudents: props.students,
             sortDirections: this.getResetSortDirections(),
         };
     }
 
     componentDidMount() {
-        this.setState({sortedStudents: this.props.students})
+        // this.setState({sortedStudents: this.props.students})
     }
 
     getResetSortDirections() {
@@ -66,7 +66,7 @@ class Students extends React.Component {
     }
 
     setLessons = (index, isIncrease) => {
-        const student = this.state.sortedStudents[index];
+        const student = this.state.sortedStudents[index].clone();
         if (isIncrease) {
             student.lessonCount++;
         } else {
@@ -74,8 +74,10 @@ class Students extends React.Component {
             console.log(student.lessonCount)
         }
         const sortedStudents = [...this.state.sortedStudents];
+        sortedStudents[index] = student;
         this.setState({sortedStudents});
     }
+
     removeStudent = (index) => {
         const students = [...this.state.sortedStudents];
         students.splice(index, 1);
@@ -118,8 +120,11 @@ class Students extends React.Component {
     }
 
     render() {
+        const { sortedStudents } = this.state;
 
-        const hasAnyStudents = this.state.sortedStudents.length > 0;
+        console.log(`Rendering Students ${sortedStudents.length} `, sortedStudents);
+
+        const hasAnyStudents = sortedStudents.length > 0;
 
         return (
             <React.Fragment>

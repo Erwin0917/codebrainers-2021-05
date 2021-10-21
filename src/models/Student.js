@@ -1,7 +1,7 @@
 
 
 
-class Student{
+class Student {
     constructor(fullName = '', age = 0, lessonCount = 0) {
         this.fullName = fullName;
         this.age = age;
@@ -13,6 +13,14 @@ class Student{
         if (lessonCount >= 0) {
             this.lessonCount = lessonCount;
         }
+    }
+
+    clone() {
+        const student = new Student();
+        for (const key in this) {
+            student[key] = this[key];
+        }
+        return student;
     }
 }
 
