@@ -62,60 +62,70 @@ class Students extends React.Component {
         const sortDirections = this.getResetSortDirections();
         sortDirections[fieldName] = direction;
 
-        this.setState({ sortedStudents, sortDirections });
+        this.setState({sortedStudents, sortDirections});
     }
 
-        setLessons = (index, isIncrease) => {
-            const student = this.state.sortedStudents[index];
-            if(isIncrease) {
-                student.lessonCount++;
-            } else {
-                student.setLessonCount(student.lessonCount - 1);
-                console.log(student.lessonCount)
+    setLessons = (index, isIncrease) => {
+        const student = this.state.sortedStudents[index];
+        if (isIncrease) {
+            student.lessonCount++;
+        } else {
+            student.setLessonCount(student.lessonCount - 1);
+            console.log(student.lessonCount)
+        }
+        const sortedStudents = [...this.state.sortedStudents];
+        this.setState({sortedStudents});
+    }
+    removeStudent = (index) => {
+        const students = [...this.state.sortedStudents];
+        students.splice(index, 1);
+        this.setState({sortedStudents: students});
+    }
+
+    studentsTable = () => {
+        return (
+            <table className="studentsTable" cellPadding='0' cellSpacing='0'>
+            <thead>
+            <tr>
+                <th onClick={() => this.sortStudent('fullName')} className="Interactive">
+                    Full name
+                </th>
+                <th onClick={() => this.sortStudent('age')} className="Interactive">
+                    Age
+                </th>
+                <th onClick={() => this.sortStudent('lessonCount')} className="Interactive">
+                    Number of lessons
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {
+                this.state.sortedStudents.map(
+                    (student, index) => <Student
+                        student={student}
+                        key={index}
+                        index={index}
+                        setLessons={this.setLessons}
+                        removeStudent={this.removeStudent}
+                    />
+                )
             }
-            const sortedStudents = [...this.state.sortedStudents];
-            this.setState({sortedStudents});
-        }
-        removeStudent = (index) => {
-            const students = [...this.state.sortedStudents];
-            students.splice(index, 1);
-            this.setState({sortedStudents: students});
-        }
+            </tbody>
+
+        </table>
+        )
+    }
 
     render() {
 
+        const hasAnyStudents = this.state.sortedStudents.length > 0;
+
         return (
             <React.Fragment>
-                <table className="studentsTable" cellPadding='0' cellSpacing='0'>
-                    <thead>
-                    <tr>
-                        <th onClick={() => this.sortStudent('fullName')} className="Interactive">
-                            Full name
-                        </th>
-                        <th onClick={() => this.sortStudent('age')} className="Interactive">
-                            Age
-                        </th>
-                        <th onClick={() => this.sortStudent('lessonCount')} className="Interactive">
-                            Number of lessons
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {
-                        this.state.sortedStudents.map(
-                            (student, index) => <Student
-                                student={student}
-                                key={index}
-                                index={index}
-                                setLessons={this.setLessons}
-                                removeStudent={this.removeStudent}
-                            />
-                        )
-                    }
-                    </tbody>
-
-                </table>
+                {
+                    hasAnyStudents && this.studentsTable()
+                }
                 <p>
                     <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
                 </p>
