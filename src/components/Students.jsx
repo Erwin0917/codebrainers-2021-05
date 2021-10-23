@@ -2,6 +2,7 @@ import React from "react";
 import StudentRow from "./StudentRow";
 import Student from "../models/Student";
 import './Students.css';
+import TextInput from "./TextInput";
 
 class Students extends React.Component {
     constructor(props) {
@@ -9,8 +10,6 @@ class Students extends React.Component {
 
         this.state = {
             age: '18',
-            isAgeFieldFocused: false,
-            isLessonCountFieldFocused: false,
             averageAge: undefined,
             lessonCount: '0',
             sortedStudents: props.students,
@@ -127,14 +126,10 @@ class Students extends React.Component {
         return !student.isAgeValid() || !student.isLessonCountValid();
     }
 
-    onAgeChange = (event) => {
-        const age = event.currentTarget.value;
-        this.setState({age});
-    }
-
-    onLessonCountChange = (event) => {
-        const lessonCount = event.currentTarget.value;
-        this.setState({lessonCount});
+    onTextInputChange = (fieldName, value) => {
+        this.setState({
+            [fieldName]: value
+        });
     }
 
     isAgeValid = () => {
@@ -152,13 +147,6 @@ class Students extends React.Component {
             this.state.lessonCount.trim()
         );
         return student.isLessonCountValid();
-    }
-
-    setFieldFocused = (fieldName, isFocused) => {
-        console.log(`setFieldFocused(${fieldName}, ${isFocused})`);
-        this.setState({
-            [fieldName]: isFocused
-        });
     }
 
     studentsTable = () => {
@@ -194,16 +182,6 @@ class Students extends React.Component {
         )
     }
 
-    getInputClassName = (validation, fieldName) => {
-        const isFocused = this.state[fieldName] === true;
-
-        if (isFocused) {
-            return "input-text";
-        }
-
-        return validation() ? "input-text" : "input-text input-text-error";
-    };
-
     render() {
         const {sortedStudents} = this.state;
 
@@ -220,30 +198,27 @@ class Students extends React.Component {
                             disabled={this.isAddStudentButtonDisabled()}>Add
                     </button>
 
-                    <input
-                        onChange={this.onFullNameChange}
-                        type="text"
-                        className="input-text"
+                    <TextInput
+                        name="fullName"
                         value={this.state.fullName}
+                        onChange={this.onTextInputChange}
+                        validationFn={() => true}
                     />
 
-                    <input
-                        onChange={this.onAgeChange}
-                        onFocus={() => this.setFieldFocused('isAgeFieldFocused', true)}
-                        onBlur={() => this.setFieldFocused('isAgeFieldFocused', false)}
-                        type="text"
-                        className={this.getInputClassName(this.isAgeValid, 'isAgeFieldFocused')}
+                    <TextInput
+                        name="age"
                         value={this.state.age}
+                        onChange={this.onTextInputChange}
+                        validationFn={this.isAgeValid}
                     />
 
-                    <input
-                        onChange={this.onLessonCountChange}
-                        onFocus={() => this.setFieldFocused('isLessonCountFieldFocused', true)}
-                        onBlur={() => this.setFieldFocused('isLessonCountFieldFocused', false)}
-                        type="text"
-                        className={this.getInputClassName(this.isLessonCountValid, 'isLessonCountFieldFocused')}
+                    <TextInput
+                        name="lessonCount"
                         value={this.state.lessonCount}
+                        onChange={this.onTextInputChange}
+                        validationFn={this.isLessonCountValid}
                     />
+
                 </div>
                 <p>
                     <button onClick={this.calculateAverageAge} className="button">Calculate average age</button>
