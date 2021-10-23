@@ -75,7 +75,9 @@ class Students extends React.Component {
         }
         const sortedStudents = [...this.state.sortedStudents];
         sortedStudents[index] = student;
+
         this.setState({sortedStudents});
+
     }
 
     removeStudent = (index) => {
@@ -85,37 +87,36 @@ class Students extends React.Component {
     }
 
     studentsTable = () => {
+
         return (
             <table className="studentsTable" cellPadding='0' cellSpacing='0'>
-            <thead>
-            <tr>
-                <th onClick={() => this.sortStudent('fullName')} className="Interactive">
-                    Full name
-                </th>
-                <th onClick={() => this.sortStudent('age')} className="Interactive">
-                    Age
-                </th>
-                <th onClick={() => this.sortStudent('lessonCount')} className="Interactive">
-                    Number of lessons
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-
-            {
-                this.state.sortedStudents.map(
-                    (student, index) => <Student
-                        student={student}
-                        key={index}
-                        index={index}
-                        setLessons={this.setLessons}
-                        removeStudent={this.removeStudent}
-                    />
-                )
-            }
-            </tbody>
-
-        </table>
+                <thead>
+                <tr>
+                    <th onClick={() => this.sortStudent('fullName')} className="Interactive">
+                        Full name
+                    </th>
+                    <th onClick={() => this.sortStudent('age')} className="Interactive">
+                        Age
+                    </th>
+                    <th onClick={() => this.sortStudent('lessonCount')} className="Interactive">
+                        Number of lessons
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    this.state.sortedStudents.map(
+                        (student, index) => <Student
+                            student={student}
+                            key={index}
+                            index={index}
+                            setLessons={this.setLessons}
+                            removeStudent={this.removeStudent}
+                        />
+                    )
+                }
+                </tbody>
+            </table>
         )
     }
 
@@ -136,7 +137,6 @@ class Students extends React.Component {
                 </p>
                 <div>
                     <p>Average age: {this.state.averageAge}</p>
-
                 </div>
             </React.Fragment>
         )
