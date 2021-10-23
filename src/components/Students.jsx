@@ -134,6 +134,13 @@ class Students extends React.Component {
         const lessonCount = event.currentTarget.value;
         this.setState({lessonCount});
     }
+    isAgeValid = () => {
+        const student = new Student(
+            '',
+            this.state.age.trim()
+        );
+        return student.isAgeValid();
+    }
 
     studentsTable = () => {
         return (
@@ -180,18 +187,18 @@ class Students extends React.Component {
                     hasAnyStudents && this.studentsTable()
                 }
                 <div>
-                    <button onClick={this.addStudent} className="calculate-age"
-                            disabled={this.isAddStudentButtonDisabled()}>Add
+                    <button onClick={this.addStudent} className='button'
+                            disabled={this.isAddStudentButtonDisabled()} >Add
                     </button>
 
                     <input onChange={this.onFullNameChange} type="text" className="input-text"
                            value={this.state.fullName}/>
-                    <input onChange={this.onAgeChange} type="text" className="input-text" value={this.state.age}/>
+                    <input onChange={this.onAgeChange} type="text" className={this.isAgeValid() ? "input-text" : "input-text input-text-error"} value={this.state.age}/>
                     <input onChange={this.onLessonCountChange} type="text" className="input-text"
                            value={this.state.lessonCount}/>
                 </div>
                 <p>
-                    <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
+                    <button onClick={this.calculateAverageAge} className="button">Calculate average age</button>
                 </p>
                 <div>
                     <p>Average age: {this.state.averageAge}</p>

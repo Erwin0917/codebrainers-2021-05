@@ -12,9 +12,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.button {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid black;
+}
+.input-text.input-text-error {
+  border-color: red;
+}
+.input-text:focus{
+  outline: 0;
+}
 
-
-input[type="text"] {
+.input-text {
   margin-top: 1em;
   padding: 1em;
+  border: 1px solid black;
 }
