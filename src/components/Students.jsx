@@ -190,6 +190,7 @@ class Students extends React.Component {
         const hasAnyStudents = sortedStudents.length > 0;
         return (
             <React.Fragment>
+                <button>move down</button>
                 {
                     hasAnyStudents && this.studentsTable()
                 }

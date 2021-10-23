@@ -1,5 +1,32 @@
 # Homework!
 
+## 23. Oct 2021
+
+Task 1.
+
+Implement validation of `fullName` field. Please implement the following validation
+criteria:
+- fullName cannot be empty
+- fullName should be no longer than 30 characters
+- fullName should not contain any spaces
+- fullName should not contain any number
+- [*] bonus points for fullName not containing any special characters
+
+Task 2.
+Add button inside the `Students` component which, when clicked, moves the
+component below any other `Students` component following it, or above it,
+if there are any components preceding it. So, in general:
+- if component is neither the first nor the last one on the list, it should have two buttons: "move up" and "move down".
+The first one moves the component up by 1 place, and the second one moves it down.
+- if component is the first one, it should have only "move down" button, which should work as described above.
+- if component is the last one, it should have only "move up" button, which should work as described above.
+- if there is only one component, it should have neither "move up" nor "move down" buttons. 
+
+Pay special attention to the implemented code so it works correctly with any number of components, i.e. 1, 2, 3, 4, 5 components...
+
+If necessary (?), create additional student groups to help you with this task.
+
+
 ## 16. Oct 2021
 
 Task 1.
