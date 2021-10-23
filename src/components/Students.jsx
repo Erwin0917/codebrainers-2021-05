@@ -132,6 +132,11 @@ class Students extends React.Component {
                 {
                     hasAnyStudents && this.studentsTable()
                 }
+                <div>
+                    <form action="">
+                        <input type="text" className="input-text" value="Testowa wartość" />
+                    </form>
+                </div>
                 <p>
                     <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
                 </p>
