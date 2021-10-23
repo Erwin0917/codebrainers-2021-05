@@ -141,6 +141,14 @@ class Students extends React.Component {
         );
         return student.isAgeValid();
     }
+    isLessonCountValid = () => {
+        const student = new Student(
+            '',
+            0,
+            this.state.lessonCount.trim()
+        );
+        return student.isLessonCountValid();
+    }
 
     studentsTable = () => {
         return (
@@ -194,7 +202,7 @@ class Students extends React.Component {
                     <input onChange={this.onFullNameChange} type="text" className="input-text"
                            value={this.state.fullName}/>
                     <input onChange={this.onAgeChange} type="text" className={this.isAgeValid() ? "input-text" : "input-text input-text-error"} value={this.state.age}/>
-                    <input onChange={this.onLessonCountChange} type="text" className="input-text"
+                    <input onChange={this.onLessonCountChange} type="text" className={this.isLessonCountValid() ? "input-text" : "input-text input-text-error"}
                            value={this.state.lessonCount}/>
                 </div>
                 <p>
