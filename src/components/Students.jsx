@@ -110,20 +110,19 @@ class Students extends React.Component {
         sortedStudents.push(student);
         this.setState({sortedStudents});
     }
+
     isAddStudentButtonDisabled = () => {
-        const fullName = this.state.fullName.trim();
-        if (fullName === ''){
-            return false;
+        const student = new Student(
+            this.state.fullName.trim(),
+            this.state.age.trim(),
+            this.state.lessonCount.trim()
+        );
+
+        if (student.fullName === ''){
+            return true;
         }
-        const age = this.state.age.trim();
-        if (!age.match(/^\d+$/)){
-            return false;
-        }
-        const lessonCount = this.state.lessonCount.trim();
-        if (!lessonCount.match(/^[1-9]\d*$/)){
-            return false;
-        }
-        return  true;
+
+        return !student.isAgeValid() || !student.isLessonCountValid();
     }
 
     onAgeChange = (event) => {

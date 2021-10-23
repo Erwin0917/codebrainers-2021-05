@@ -16,6 +16,14 @@ class Student {
         }
     }
 
+    isAgeValid() {
+        return this.age.toString().match(/^[1-9]\d*$/);
+    }
+
+    isLessonCountValid() {
+        return this.lessonCount.toString().match(/^([1-9]\d*)|(0)$/);
+    }
+
     clone() {
         const student = new Student();
         for (const key in this) {
