@@ -112,7 +112,18 @@ class Students extends React.Component {
     }
     isAddStudentButtonDisabled = () => {
         const fullName = this.state.fullName.trim();
-        return (fullName === '');
+        if (fullName === ''){
+            return false;
+        }
+        const age = this.state.age.trim();
+        if (!age.match(/^\d+$/)){
+            return false;
+        }
+        const lessonCount = this.state.lessonCount.trim();
+        if (!lessonCount.match(/^[1-9]\d*$/)){
+            return false;
+        }
+        return  true;
     }
 
     onAgeChange = (event) => {
@@ -126,7 +137,6 @@ class Students extends React.Component {
     }
 
     studentsTable = () => {
-
         return (
             <table className="studentsTable" cellPadding='0' cellSpacing='0'>
                 <thead>
