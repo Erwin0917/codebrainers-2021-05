@@ -9,6 +9,8 @@ class Students extends React.Component {
 
         this.state = {
             age: '18',
+            isAgeFieldFocused: false,
+            isLessonCountFieldFocused: false,
             averageAge: undefined,
             lessonCount: '0',
             sortedStudents: props.students,
@@ -118,7 +120,7 @@ class Students extends React.Component {
             this.state.lessonCount.trim()
         );
 
-        if (student.fullName === ''){
+        if (student.fullName === '') {
             return true;
         }
 
@@ -134,6 +136,7 @@ class Students extends React.Component {
         const lessonCount = event.currentTarget.value;
         this.setState({lessonCount});
     }
+
     isAgeValid = () => {
         const student = new Student(
             '',
@@ -141,6 +144,7 @@ class Students extends React.Component {
         );
         return student.isAgeValid();
     }
+
     isLessonCountValid = () => {
         const student = new Student(
             '',
@@ -148,6 +152,13 @@ class Students extends React.Component {
             this.state.lessonCount.trim()
         );
         return student.isLessonCountValid();
+    }
+
+    setFieldFocused = (fieldName, isFocused) => {
+        console.log(`setFieldFocused(${fieldName}, ${isFocused})`);
+        this.setState({
+            [fieldName]: isFocused
+        });
     }
 
     studentsTable = () => {
@@ -183,6 +194,16 @@ class Students extends React.Component {
         )
     }
 
+    getInputClassName = (validation, fieldName) => {
+        const isFocused = this.state[fieldName] === true;
+
+        if (isFocused) {
+            return "input-text";
+        }
+
+        return validation() ? "input-text" : "input-text input-text-error";
+    };
+
     render() {
         const {sortedStudents} = this.state;
 
@@ -196,14 +217,33 @@ class Students extends React.Component {
                 }
                 <div>
                     <button onClick={this.addStudent} className='button'
-                            disabled={this.isAddStudentButtonDisabled()} >Add
+                            disabled={this.isAddStudentButtonDisabled()}>Add
                     </button>
 
-                    <input onChange={this.onFullNameChange} type="text" className="input-text"
-                           value={this.state.fullName}/>
-                    <input onChange={this.onAgeChange} type="text" className={this.isAgeValid() ? "input-text" : "input-text input-text-error"} value={this.state.age}/>
-                    <input onChange={this.onLessonCountChange} type="text" className={this.isLessonCountValid() ? "input-text" : "input-text input-text-error"}
-                           value={this.state.lessonCount}/>
+                    <input
+                        onChange={this.onFullNameChange}
+                        type="text"
+                        className="input-text"
+                        value={this.state.fullName}
+                    />
+
+                    <input
+                        onChange={this.onAgeChange}
+                        onFocus={() => this.setFieldFocused('isAgeFieldFocused', true)}
+                        onBlur={() => this.setFieldFocused('isAgeFieldFocused', false)}
+                        type="text"
+                        className={this.getInputClassName(this.isAgeValid, 'isAgeFieldFocused')}
+                        value={this.state.age}
+                    />
+
+                    <input
+                        onChange={this.onLessonCountChange}
+                        onFocus={() => this.setFieldFocused('isLessonCountFieldFocused', true)}
+                        onBlur={() => this.setFieldFocused('isLessonCountFieldFocused', false)}
+                        type="text"
+                        className={this.getInputClassName(this.isLessonCountValid, 'isLessonCountFieldFocused')}
+                        value={this.state.lessonCount}
+                    />
                 </div>
                 <p>
                     <button onClick={this.calculateAverageAge} className="button">Calculate average age</button>
