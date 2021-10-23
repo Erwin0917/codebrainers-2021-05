@@ -10,7 +10,8 @@ class Student {
 
     setLessonCount(lessonCount) {
         console.log('setLessonCount', lessonCount)
-        if (lessonCount >= 0) {
+        lessonCount = parseInt(lessonCount);
+        if (isNaN(lessonCount) === false && lessonCount >= 0) {
             this.lessonCount = lessonCount;
         }
     }

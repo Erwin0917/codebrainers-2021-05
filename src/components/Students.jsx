@@ -8,8 +8,9 @@ class Students extends React.Component {
         super(props);
 
         this.state = {
-            age: 18,
+            age: '18',
             averageAge: undefined,
+            lessonCount: '0',
             sortedStudents: props.students,
             sortDirections: this.getResetSortDirections(),
             fullName: 'test value',
@@ -70,7 +71,8 @@ class Students extends React.Component {
     setLessons = (index, isIncrease) => {
         const student = this.state.sortedStudents[index].clone();
         if (isIncrease) {
-            student.lessonCount++;
+            console.log('lessonCount', student.lessonCount, typeof student.lessonCount);
+            student.lessonCount = student.lessonCount + 1;
         } else {
             student.setLessonCount(student.lessonCount - 1);
             console.log(student.lessonCount)
@@ -97,23 +99,30 @@ class Students extends React.Component {
         const sortedStudents = [...this.state.sortedStudents];
         const student = new Student();
         const fullName = this.state.fullName.trim();
-        if(fullName === ''){
+        if (fullName === '') {
             return;
         }
         student.fullName = fullName;
-        const age = this.state.age.trim();
+        student.age = this.state.age;
+        student.setLessonCount(this.state.lessonCount.trim());
+        // const age = this.state.age.trim();
 
         sortedStudents.push(student);
         this.setState({sortedStudents});
     }
-    isAddStudentButtonDisabled = () =>{
+    isAddStudentButtonDisabled = () => {
         const fullName = this.state.fullName.trim();
-        return(fullName === '');
+        return (fullName === '');
     }
 
     onAgeChange = (event) => {
         const age = event.currentTarget.value;
         this.setState({age});
+    }
+
+    onLessonCountChange = (event) => {
+        const lessonCount = event.currentTarget.value;
+        this.setState({lessonCount});
     }
 
     studentsTable = () => {
@@ -151,7 +160,7 @@ class Students extends React.Component {
     }
 
     render() {
-        const { sortedStudents } = this.state;
+        const {sortedStudents} = this.state;
 
         console.log(`Rendering Students ${sortedStudents.length} `, sortedStudents);
 
@@ -162,10 +171,15 @@ class Students extends React.Component {
                     hasAnyStudents && this.studentsTable()
                 }
                 <div>
-                    <button onClick={this.addStudent} className="calculate-age" disabled={this.isAddStudentButtonDisabled()}>Add</button>
+                    <button onClick={this.addStudent} className="calculate-age"
+                            disabled={this.isAddStudentButtonDisabled()}>Add
+                    </button>
 
-                    <input onChange={this.onFullNameChange} type="text" className="input-text" value={this.state.fullName} />
-                    <input onChange={this.onAgeChange} type="text" className="input-text" value={this.state.age} />
+                    <input onChange={this.onFullNameChange} type="text" className="input-text"
+                           value={this.state.fullName}/>
+                    <input onChange={this.onAgeChange} type="text" className="input-text" value={this.state.age}/>
+                    <input onChange={this.onLessonCountChange} type="text" className="input-text"
+                           value={this.state.lessonCount}/>
                 </div>
                 <p>
                     <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
