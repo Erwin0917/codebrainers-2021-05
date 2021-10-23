@@ -91,10 +91,6 @@ class Students extends React.Component {
         this.setState({sortedStudents: students});
     }
 
-    onFullNameChange = (event) => {
-        const fullName = event.currentTarget.value;
-        this.setState({fullName});
-    }
     addStudent = () => {
 
         const sortedStudents = [...this.state.sortedStudents];
