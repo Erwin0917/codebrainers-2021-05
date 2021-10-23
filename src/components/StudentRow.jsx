@@ -1,7 +1,7 @@
 import React from 'react';
 import StudentModel from '../models/Student';
 
-function Student(props) {
+function StudentRow(props) {
 
     console.log('Rendering student with name', props.student.fullName);
 
@@ -40,4 +40,4 @@ function Student(props) {
     );
 }
 
-export default React.memo(Student);
+export default React.memo(StudentRow);

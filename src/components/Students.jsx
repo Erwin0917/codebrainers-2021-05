@@ -1,6 +1,6 @@
 import React from "react";
-import Student from "./Student";
-import StudentModel from "../models/Student";
+import StudentRow from "./StudentRow";
+import Student from "../models/Student";
 import './Students.css';
 
 class Students extends React.Component {
@@ -20,7 +20,7 @@ class Students extends React.Component {
     }
 
     getResetSortDirections() {
-        const sortDirectionKeys = Object.keys(new StudentModel());
+        const sortDirectionKeys = Object.keys(new Student());
         const sortDirections = {};
         sortDirectionKeys.forEach((key) => sortDirections[key] = undefined);
         return sortDirections;
@@ -91,6 +91,22 @@ class Students extends React.Component {
         const fullName = event.currentTarget.value;
         this.setState({fullName});
     }
+    addStudent = () => {
+
+        const sortedStudents = [...this.state.sortedStudents];
+        const student = new Student();
+        const fullName = this.state.fullName.trim();
+        if(fullName === ''){
+            return;
+        }
+        student.fullName = fullName;
+        sortedStudents.push(student);
+        this.setState({sortedStudents});
+    }
+    isAddStudentButtonDisabled = () =>{
+        const fullName = this.state.fullName.trim();
+        return(fullName === '');
+    }
 
     studentsTable = () => {
 
@@ -112,7 +128,7 @@ class Students extends React.Component {
                 <tbody>
                 {
                     this.state.sortedStudents.map(
-                        (student, index) => <Student
+                        (student, index) => <StudentRow
                             student={student}
                             key={index}
                             index={index}
@@ -132,16 +148,14 @@ class Students extends React.Component {
         console.log(`Rendering Students ${sortedStudents.length} `, sortedStudents);
 
         const hasAnyStudents = sortedStudents.length > 0;
-
         return (
             <React.Fragment>
                 {
                     hasAnyStudents && this.studentsTable()
                 }
                 <div>
-                    <form action="">
-                        <input onChange={this.onFullNameChange} type="text" className="input-text" value={this.state.fullName} />
-                    </form>
+                    <button onClick={this.addStudent} className="calculate-age" disabled={this.isAddStudentButtonDisabled()}>Add</button>
+                    <input onChange={this.onFullNameChange} type="text" className="input-text" value={this.state.fullName} />
                 </div>
                 <p>
                     <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
