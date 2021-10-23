@@ -11,6 +11,7 @@ class Students extends React.Component {
             averageAge: undefined,
             sortedStudents: props.students,
             sortDirections: this.getResetSortDirections(),
+            fullName: 'test value',
         };
     }
 
@@ -86,6 +87,11 @@ class Students extends React.Component {
         this.setState({sortedStudents: students});
     }
 
+    onFullNameChange = (event) => {
+        const fullName = event.currentTarget.value;
+        this.setState({fullName});
+    }
+
     studentsTable = () => {
 
         return (
@@ -134,7 +140,7 @@ class Students extends React.Component {
                 }
                 <div>
                     <form action="">
-                        <input type="text" className="input-text" value="Testowa wartość" />
+                        <input onChange={this.onFullNameChange} type="text" className="input-text" value={this.state.fullName} />
                     </form>
                 </div>
                 <p>
