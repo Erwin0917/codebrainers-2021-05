@@ -8,6 +8,7 @@ class Students extends React.Component {
         super(props);
 
         this.state = {
+            age: 18,
             averageAge: undefined,
             sortedStudents: props.students,
             sortDirections: this.getResetSortDirections(),
@@ -100,12 +101,19 @@ class Students extends React.Component {
             return;
         }
         student.fullName = fullName;
+        const age = this.state.age.trim();
+
         sortedStudents.push(student);
         this.setState({sortedStudents});
     }
     isAddStudentButtonDisabled = () =>{
         const fullName = this.state.fullName.trim();
         return(fullName === '');
+    }
+
+    onAgeChange = (event) => {
+        const age = event.currentTarget.value;
+        this.setState({age});
     }
 
     studentsTable = () => {
@@ -155,7 +163,9 @@ class Students extends React.Component {
                 }
                 <div>
                     <button onClick={this.addStudent} className="calculate-age" disabled={this.isAddStudentButtonDisabled()}>Add</button>
+
                     <input onChange={this.onFullNameChange} type="text" className="input-text" value={this.state.fullName} />
+                    <input onChange={this.onAgeChange} type="text" className="input-text" value={this.state.age} />
                 </div>
                 <p>
                     <button onClick={this.calculateAverageAge} className="calculate-age">Calculate average age</button>
