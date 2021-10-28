@@ -39,6 +39,7 @@ class PlantForm extends React.PureComponent {
                                 value={plantName}
                                 onChange={inputOnChange}
                             />
+                            <h3>{plantName}</h3>
                         </FormGroup>
                     </Col>
                 </Row>
