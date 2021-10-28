@@ -69,3 +69,5 @@ class PlantasticNavbar extends React.PureComponent {
 }
 
 export default PlantasticNavbar;
+
+

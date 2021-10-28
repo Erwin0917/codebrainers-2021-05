@@ -4,7 +4,7 @@ import CategoryItem from "components/categories/CategoryItem";
 import InProgress from "components/shared/InProgress";
 import axios from 'axios';
 
-const CATEGORIES_FETCH_DELAY = 500;
+const CATEGORIES_FETCH_DELAY = 5000;
 
 class Categories extends React.PureComponent {
   constructor(props) {
@@ -36,11 +36,6 @@ class Categories extends React.PureComponent {
           });
           const successCategories = true;
           this.setState({ categories, successCategories });
-          resolve();
-        })
-        .catch((error) => {
-          this.setState({ successCategories: false });
-          reject();
         })
         .finally(() => {
           console.log('Resolved');
@@ -54,7 +49,6 @@ class Categories extends React.PureComponent {
       successCategories,
       categories,
     } = this.state;
-
 
     return (
       <Card>

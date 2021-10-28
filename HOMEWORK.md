@@ -1,5 +1,16 @@
 # Homework!
 
+
+## 28. Oct 2021
+
+### Task 1.
+
+Take a look at the `<InProgress/>` component. There's a certain (non-critical) bug in the
+code of this component. Investigate the code and fix this bug!
+
+Tip: no, it's not about unused `const icon ` in the code.
+
+
 ## 23. Oct 2021
 
 Task 1.
