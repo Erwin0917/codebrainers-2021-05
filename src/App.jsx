@@ -1,68 +1,35 @@
-import React from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import './App.scss';
-import {BrowserRouter as Router} from 'react-router-dom';
-import PlantasticNavbar from "components/nav/navbar/PlantasticNavbar";
-import {someOtherArray} from "constants/PlantConstants";
-import PlantasticContainer from "components/main/PlantasticContainer";
+import LoginPage from 'pages/login/LoginPage';
+import Auth from 'services/Auth';
+import LoadingPage from 'pages/loading/LoadingPage';
 
-class App extends React.PureComponent {
+const Authenticated = React.lazy(() => import('pages/authenticated/AuthenticatedPage'));
 
-  constructor(props) {
-    super(props);
+const App = () => {
 
-    this.state = {
-      userFullName: '',
-      plantName: '',
-      someSelectField: '333',
-      fertilizingFrequency: someOtherArray[someOtherArray.length - 1].value
-    };
-  }
+  const [ token, setToken ] = useState(Auth.getTokenFromStorage());
+  const isAuthenticated = token && token !== Auth.emptyToken;
 
-  inputOnBlur = (event) => {
-    const {currentTarget} = event;
-    const {value, name} = currentTarget;
-    this.setState({[name]: value.trim()});
+  const onTokenObtained = (token) => {
+    Auth.putTokenToStorage(token);
+    setToken(token);
   };
 
-  inputOnChange = (event) => {
-    const {currentTarget} = event;
-    const {value, name} = currentTarget;
-    this.setState({[name]: value});
+  const onLogout = () => onTokenObtained(Auth.emptyToken);
 
-  };
+  useEffect(Auth.appendAxiosAuthorizationHeader(token), [ token ]);
 
-  delayFetch(ms, func) {
-    return new Promise((resolve, reject) => setTimeout(() => func(resolve, reject), ms));
-  }
-
-  render() {
-    const {
-      fertilizingFrequency,
-      plantName,
-      someSelectField,
-      userFullName,
-    } = this.state;
-
-    return (
-            <Router>
-              <PlantasticNavbar
-                      plantName={plantName}
-                      inputOnChange={this.inputOnChange}
-                      userFullName={userFullName.trim()} // .trim() wycina białe znaki z przodu oraz z tyłu stringa
-              />
-              <PlantasticContainer
-                      delayFetch={this.delayFetch}
-                      someSelectField={someSelectField}
-                      fertilizingFrequency={fertilizingFrequency}
-                      inputOnChange={this.inputOnChange}
-                      plantName={plantName}
-                      userFullName={userFullName}
-                      inputOnBlur={this.inputOnBlur}
-              />
-            </Router>
-    )
-  }
-}
+  return (
+    <Suspense fallback={ <LoadingPage /> }>
+      {
+        isAuthenticated ?
+          <Authenticated onLogout={ onLogout } /> :
+          <LoginPage onTokenObtained={ onTokenObtained } />
+      }
+    </Suspense>
+  );
+};
 
 
 export default App;

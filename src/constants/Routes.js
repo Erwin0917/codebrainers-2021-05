@@ -1,10 +1,10 @@
-const ROUTE_CATEGORIES = "/categories";
-const ROUTE_PLANTS = "/";
-const ROUTE_ROOMS = "/rooms";
-const ROUTE_PREFERENCES = "/preferences";
-export {
-    ROUTE_CATEGORIES,
-    ROUTE_PLANTS,
-    ROUTE_ROOMS,
-    ROUTE_PREFERENCES,
-};
+class Routes {
+  static ROOT = '/';
+  static CATEGORIES = '/categories';
+  static PLANTS = '/plants';
+  static PLANTS_CREATE = Routes.PLANTS + '/create';
+  static PLANTS_EDIT = Routes.PLANTS + '/:plantId/edit';
+  static ROOMS = '/rooms';
+}
+
+export default Routes;

@@ -1,51 +1,69 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './Plant.scss';
+import find from 'lodash-es/find';
+import moment from 'moment-es6';
+import {
+  plantDifficultyOptions,
+  plantExposureOptions,
+  plantExposureUnknown,
+  plantHumidityOptions,
+  plantHumidityUnknown,
+  plantTemperatureOptions,
+} from 'constants/PlantConstants';
+import { plantPropTypes } from 'proptypes/PlantsPropTypes';
+import PlantExposureIcon from 'components/plants/icons/PlantExposureIcon';
+import PlantHumidityIcon from 'components/plants/icons/PlantHumidityIcon';
+import PlantBloomingIcon from 'components/plants/icons/PlantBloomingIcon';
+import PlantFormFields from 'components/plants/plant-form/constants/PlantFormFields';
 
-class Plant extends React.PureComponent {
+const Plant = ({ categories, onEdit, plant, rooms }) => {
 
-  render () {
-    const {
-      blooming,
-      category,
-      categorySlug,
-      difficulty,
-      fertilizingInterval,
-      id,
-      lastFertilized,
-      lastWatered,
-      name,
-      requiredExposure,
-      requiredHumidity,
-      requiredTemperature,
-      room,
-      url,
-      wateringInterval,
-    } = this.props.plant;
+  const findValueByKey = (options, valueToFind) => {
+    const id = options.findIndex((propValue) => propValue.id === valueToFind);
+    return (id !== -1 ? options[id].name : '¯\\_(ツ)_/¯');
+  };
 
-    console.log(this.props.plant);
+  const asYmd = PlantFormFields.getDateAsYMD;
+  const asAgo = (value) => moment.isMoment(value) ? value.fromNow() : '';
 
-    return (
-            <tr>
-              <td>{id}</td>
-              <td>{name}</td>
-              <td>{category}</td>
-              <td>{room}</td>
-              <td>{blooming.toString()}</td>
-              <td>{difficulty}</td>
-              <td>{requiredExposure}</td>
-              <td>{requiredHumidity}</td>
-              <td>{requiredTemperature}</td>
-              <td>{wateringInterval}</td>
-              <td>{fertilizingInterval}</td>
-            </tr>
-    );
-  }
+  const plantCategory = findValueByKey(categories, plant.category);
+  const plantDifficulty = findValueByKey(plantDifficultyOptions, plant.difficulty);
+  /**
+   * @type PlantExposure
+   */
+  const plantExposure = find(plantExposureOptions, { id: plant.requiredExposure }) || plantExposureUnknown;
+  /**
+   * @type PlantHumidity
+   */
+  const plantHumidity = find(plantHumidityOptions, { id: plant.requiredHumidity }) || plantHumidityUnknown;
+  const plantLastFertilized = asYmd(plant.lastFertilized);
+  const plantLastWatered = asAgo(plant.lastWatered);
+  const plantRoom = findValueByKey(rooms, plant.room);
+  const plantTemperature = findValueByKey(plantTemperatureOptions, plant.requiredTemperature);
 
-}
-
-Plant.propTypes = {
-  plant: PropTypes.object.isRequired,
+  return (
+    <tr key={ plant.id } onClick={ () => onEdit(plant.id) }>
+      <td>{ plant.name }</td>
+      <td>{ plantCategory }</td>
+      <td className="plant-attribute-icon text-center" title={ plantExposure.name }>
+        <PlantExposureIcon plantExposure={ plantExposure } />
+      </td>
+      <td className="plant-attribute-icon-sm text-center">
+        <PlantHumidityIcon plantHumidity={ plantHumidity } />
+      </td>
+      <td>{ plantTemperature }</td>
+      <td className="plant-attribute-icon text-center">
+        <PlantBloomingIcon plantBlooming={ plant.blooming } />
+      </td>
+      <td>{ plantDifficulty }</td>
+      <td>{ plantRoom }</td>
+      <td>{ plantLastFertilized }</td>
+      <td>{ plantLastWatered }</td>
+    </tr>
+  );
 };
 
+Plant.propTypes = plantPropTypes;
+
 export default Plant;
+
