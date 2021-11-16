@@ -1,29 +1,34 @@
-import {Card, CardBody, Table} from 'reactstrap';
+import {Card, CardBody, ListGroup, Table} from 'reactstrap';
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Plant from 'components/plants/Plant';
 import InProgress from 'components/shared/InProgress';
+import CategoryItem from "../categories/CategoryItem";
 
-const PLANTS_FETCH_DELAY = 250;
+const PLANTS_FETCH_DELAY = 1000;
+const CATEGORIES_FETCH_DELAY = 3000;
 
 class Plants extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            plants: [],
-            successPlants: undefined,
-            inProgress: false,
+          plants: [],
+          categories: [],
+          successPlants: undefined,
+          successCategories: undefined,
+          inProgressPlants: false,
+          inProgressCategories: false,
         };
     }
 
     componentDidMount() {
         this.fetchCategories()
             .finally(() => {
-                this.setState({inProgress: false});
+                this.setState({inProgressCategories: false});
             })
         this.fetchPlants().finally(() => {
-            this.setState({inProgress: false});
+            this.setState({inProgressPlants: false});
         });
     }
 
@@ -67,7 +72,7 @@ class Plants extends React.PureComponent {
 
     fetchPlants() {
         const requestUrl = 'http://gentle-tor-07382.herokuapp.com/plants/';
-        this.setState({inProgress: true});
+        this.setState({inProgressPlants: true});
         return this.props.delayFetch(PLANTS_FETCH_DELAY, (resolve, reject) => {
             axios
                 .get(requestUrl)
@@ -88,7 +93,7 @@ class Plants extends React.PureComponent {
     fetchCategories() {
 
         const requestUrl = 'http://gentle-tor-07382.herokuapp.com/categories/';
-        this.setState({inProgress: true});
+        this.setState({inProgressCategories: true});
         return this.props.delayFetch(CATEGORIES_FETCH_DELAY, (resolve, reject) => {
             axios.get(requestUrl)
                 .then((response) => {
@@ -111,44 +116,85 @@ class Plants extends React.PureComponent {
     }
 
     render() {
-        const {plants, successPlants, inProgress} = this.state;
+      const {
+        plants,
+          inProgressCategories,
+          inProgressPlants,
+        successCategories,
+        categories,
+          successPlants,
+      } = this.state;
 
-        return (
+      return (
+          <React.Fragment>
+          <Card>
+            <CardBody>
+              <div className="app-container">
+                <InProgress inProgress={inProgressCategories} />
+                {
+                  successCategories === false &&
+                  <p>Nie udało się pobrać Kategorii</p>
+                }
+                {
+                  successCategories &&
+                  <ListGroup className="categories">
+                    {
+                      categories.map((item, index, arr) =>
+                          <CategoryItem
+                              category={item}
+                              label='category'
+                              key={index}
+                              isLastItem={arr.length - 1 === index}
+                              index={index}
+                          />
+                      )
+                    }
+                  </ListGroup>
+                }
+              </div>
+            </CardBody>
+          </Card>
+
             <Card className="mb-4">
-                <CardBody>
-                    <InProgress inProgress={inProgress}/>
-                    {successPlants === false && <p>Nie udało się pobrać Kwiatow</p>}
-                    {successPlants && (
-                        <Table hover striped responsive>
-                            <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Room</th>
-                                <th>Blooming</th>
-                                <th>Difficulty</th>
-                                <th>Exposure</th>
-                                <th>Humidity</th>
-                                <th>Temperature</th>
-                                <th>Watering Interval</th>
-                                <th>Fertilizing Interval</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                plants.map((plant, index) => (
-                                    <Plant plant={plant} key={plant.id}/>
-                                ))
-                            }
+              <CardBody>
+                <InProgress inProgress={inProgressPlants}/>
+                {successPlants === false && <p>Nie udało się pobrać Kwiatow</p>}
+                {successPlants && (
+                    <Table hover striped responsive>
+                      <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Room</th>
+                        <th>Blooming</th>
+                        <th>Difficulty</th>
+                        <th>Exposure</th>
+                        <th>Humidity</th>
+                        <th>Temperature</th>
+                        <th>Watering Interval</th>
+                        <th>Fertilizing Interval</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {
+                        plants.map((plant, index) => (
+                            <Plant plant={plant} key={plant.id}/>
+                        ))
+                      }
 
-                            </tbody>
-                        </Table>
-                    )}
-                </CardBody>
+                      </tbody>
+                    </Table>
+                )}
+              </CardBody>
             </Card>
-        );
+
+
+      </React.Fragment>
+
+      )
     }
+
 }
 
 Plants.propTypes = {
