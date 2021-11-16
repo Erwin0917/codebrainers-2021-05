@@ -7,7 +7,7 @@ class Plant extends React.PureComponent {
   render () {
     const {
       blooming,
-      category,
+      categoryId,
       categorySlug,
       difficulty,
       fertilizingInterval,
@@ -25,11 +25,19 @@ class Plant extends React.PureComponent {
 
     console.log(this.props.plant);
 
+    const {categories} = this.props;
+     console.log(categories)
+      const category = categories.find(category => category.id === categoryId);
+     let categoryName = '?';
+     if(category !== undefined){
+         categoryName = category.name;
+     }
+
     return (
             <tr>
               <td>{id}</td>
               <td>{name}</td>
-              <td>{category}</td>
+              <td>{categoryName}</td>
               <td>{room}</td>
               <td>{blooming.toString()}</td>
               <td>{difficulty}</td>

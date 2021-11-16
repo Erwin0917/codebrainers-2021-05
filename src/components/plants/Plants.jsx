@@ -6,8 +6,8 @@ import Plant from 'components/plants/Plant';
 import InProgress from 'components/shared/InProgress';
 import CategoryItem from "../categories/CategoryItem";
 
-const PLANTS_FETCH_DELAY = 1000;
-const CATEGORIES_FETCH_DELAY = 3000;
+const PLANTS_FETCH_DELAY = 500;
+const CATEGORIES_FETCH_DELAY = 1000;
 
 class Plants extends React.PureComponent {
     constructor(props) {
@@ -52,7 +52,7 @@ class Plants extends React.PureComponent {
         } = item;
         return {
             blooming,
-            category,
+            categoryId: category,
             categorySlug: category_slug,
             difficulty,
             fertilizingInterval: fertilizing_interval,
@@ -124,42 +124,19 @@ class Plants extends React.PureComponent {
         categories,
           successPlants,
       } = this.state;
+      const success = successCategories && successPlants;
+      const inProgress = inProgressPlants || inProgressCategories;
 
       return (
           <React.Fragment>
-          <Card>
-            <CardBody>
-              <div className="app-container">
-                <InProgress inProgress={inProgressCategories} />
-                {
-                  successCategories === false &&
-                  <p>Nie udało się pobrać Kategorii</p>
-                }
-                {
-                  successCategories &&
-                  <ListGroup className="categories">
-                    {
-                      categories.map((item, index, arr) =>
-                          <CategoryItem
-                              category={item}
-                              label='category'
-                              key={index}
-                              isLastItem={arr.length - 1 === index}
-                              index={index}
-                          />
-                      )
-                    }
-                  </ListGroup>
-                }
-              </div>
-            </CardBody>
-          </Card>
+
 
             <Card className="mb-4">
               <CardBody>
-                <InProgress inProgress={inProgressPlants}/>
-                {successPlants === false && <p>Nie udało się pobrać Kwiatow</p>}
-                {successPlants && (
+                <InProgress inProgress={inProgress}/>
+                  {successPlants === false && <p>Nie udało się pobrać Kwiatow</p>}
+                  {successCategories === false && <p>Nie udało się pobrać Kategorii</p>}
+                {success && (
                     <Table hover striped responsive>
                       <thead>
                       <tr>
@@ -179,7 +156,7 @@ class Plants extends React.PureComponent {
                       <tbody>
                       {
                         plants.map((plant, index) => (
-                            <Plant plant={plant} key={plant.id}/>
+                            <Plant plant={plant} key={plant.id} categories={categories}/>
                         ))
                       }
 
