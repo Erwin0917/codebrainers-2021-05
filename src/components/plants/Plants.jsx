@@ -6,7 +6,6 @@ import Plant from 'components/plants/Plant';
 import InProgress from 'components/shared/InProgress';
 
 const PLANTS_FETCH_DELAY = 500;
-const CATEGORIES_FETCH_DELAY = 1000;
 const ROOMS_FETCH_DELAY = 1500;
 
 class Plants extends React.PureComponent {
@@ -14,21 +13,15 @@ class Plants extends React.PureComponent {
         super(props);
         this.state = {
             plants: [],
-            categories: [],
             rooms: [],
             successPlants: undefined,
-            successCategories: undefined,
             successRooms: undefined,
             inProgressPlants: false,
-            inProgressCategories: false,
             inProgressRooms: false,
         };
     }
 
     componentDidMount() {
-        this.fetchCategories().finally(() => {
-            this.setState({inProgressCategories: false});
-        })
         this.fetchPlants().finally(() => {
             this.setState({inProgressPlants: false});
         });
@@ -95,31 +88,6 @@ class Plants extends React.PureComponent {
         });
     }
 
-    fetchCategories() {
-
-        const requestUrl = 'http://gentle-tor-07382.herokuapp.com/categories/';
-        this.setState({inProgressCategories: true});
-        return this.props.delayFetch(CATEGORIES_FETCH_DELAY, (resolve, reject) => {
-            axios.get(requestUrl)
-                .then((response) => {
-                    const data = response.data;
-                    const categories = data.map((item) => {
-                        return {id: item.id, name: item.name};
-                    });
-                    const successCategories = true;
-                    this.setState({categories, successCategories});
-                    resolve();
-                })
-                .catch((error) => {
-                    this.setState({successCategories: false});
-                    reject();
-                })
-                .finally(() => {
-                    console.log('Resolved');
-                });
-        });
-    }
-
     fetchRooms() {
 
         const requestUrl = 'http://gentle-tor-07382.herokuapp.com/rooms/';
@@ -147,19 +115,22 @@ class Plants extends React.PureComponent {
 
     render() {
         const {
-            categories,
-            inProgressCategories,
             inProgressPlants,
             inProgressRooms,
             plants,
             rooms,
-            successCategories,
             successPlants,
             successRooms,
         } = this.state;
 
-        const success = successCategories && successPlants && successRooms;
-        const inProgress = inProgressPlants || inProgressCategories || inProgressRooms;
+        const {
+            categories,
+            categoriesSuccess,
+            categoriesInProgress,
+        } = this.props;
+
+        const success = categoriesSuccess && successPlants && successRooms;
+        const inProgress = inProgressPlants || categoriesInProgress || inProgressRooms;
 
         return (
             <React.Fragment>
@@ -167,7 +138,7 @@ class Plants extends React.PureComponent {
                     <CardBody>
                         <InProgress inProgress={inProgress}/>
                         {successPlants === false && <p>Unable to fetch plants data</p>}
-                        {successCategories === false && <p>Unable to fetch categories data</p>}
+                        {categoriesSuccess === false && <p>Unable to fetch categories data</p>}
                         {successRooms === false && <p>Unable to fetch rooms data</p>}
                         {success && (
                             <Table hover striped responsive>
