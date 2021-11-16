@@ -42,7 +42,7 @@ class PlantasticContainer extends React.PureComponent {
                   />
                 </Route>
                 <Route path={ROUTE_ROOMS}>
-                  <Rooms/>
+                  <Rooms delayFetch={delayFetch}/>
                 </Route>
                 <Route path={ROUTE_PREFERENCES}>
                   <Account userFullName={userFullName} inputOnChange={inputOnChange} inputOnBlur={inputOnBlur}/>

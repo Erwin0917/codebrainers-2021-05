@@ -13,23 +13,22 @@ class Plants extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-          plants: [],
-          categories: [],
+            plants: [],
+            categories: [],
             rooms: [],
-          successPlants: undefined,
-          successCategories: undefined,
+            successPlants: undefined,
+            successCategories: undefined,
             successRooms: undefined,
-          inProgressPlants: false,
-          inProgressCategories: false,
+            inProgressPlants: false,
+            inProgressCategories: false,
             inProgressRooms: false,
         };
     }
 
     componentDidMount() {
-        this.fetchCategories()
-            .finally(() => {
-                this.setState({inProgressCategories: false});
-            })
+        this.fetchCategories().finally(() => {
+            this.setState({inProgressCategories: false});
+        })
         this.fetchPlants().finally(() => {
             this.setState({inProgressPlants: false});
         });
@@ -147,67 +146,61 @@ class Plants extends React.PureComponent {
     }
 
     render() {
-      const {
-        plants,
-          inProgressCategories,
-          inProgressPlants,
-        successCategories,
-        categories,
-          successPlants,
-      } = this.state;
-            const {
-          rooms,
-          inProgressRooms,
-          successRooms,
-      } = this.state;
-      const success = successCategories && successPlants && successRooms;
-      const inProgress = inProgressPlants || inProgressCategories || inProgressRooms;
+        const {
+            categories,
+            inProgressCategories,
+            inProgressPlants,
+            inProgressRooms,
+            plants,
+            rooms,
+            successCategories,
+            successPlants,
+            successRooms,
+        } = this.state;
 
+        const success = successCategories && successPlants && successRooms;
+        const inProgress = inProgressPlants || inProgressCategories || inProgressRooms;
 
-      return (
-          <React.Fragment>
+        return (
+            <React.Fragment>
+                <Card className="mb-4">
+                    <CardBody>
+                        <InProgress inProgress={inProgress}/>
+                        {successPlants === false && <p>Unable to fetch plants data</p>}
+                        {successCategories === false && <p>Unable to fetch categories data</p>}
+                        {successRooms === false && <p>Unable to fetch rooms data</p>}
+                        {success && (
+                            <Table hover striped responsive>
+                                <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Room</th>
+                                    <th>Blooming</th>
+                                    <th>Difficulty</th>
+                                    <th>Exposure</th>
+                                    <th>Humidity</th>
+                                    <th>Temperature</th>
+                                    <th>Watering Interval</th>
+                                    <th>Fertilizing Interval</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    plants.map((plant, index) => (
+                                        <Plant plant={plant} key={plant.id} categories={categories} rooms={rooms}/>
+                                    ))
+                                }
 
+                                </tbody>
+                            </Table>
+                        )}
+                    </CardBody>
+                </Card>
+            </React.Fragment>
 
-            <Card className="mb-4">
-              <CardBody>
-                <InProgress inProgress={inProgress}/>
-                  {successPlants === false && <p>Nie udało się pobrać Kwiatow</p>}
-                  {successCategories === false && <p>Nie udało się pobrać Kategorii</p>}
-                  {successRooms === false && <p>Nie udało się pobrać Pokojów</p>}
-                {success && (
-                    <Table hover striped responsive>
-                      <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Room</th>
-                        <th>Blooming</th>
-                        <th>Difficulty</th>
-                        <th>Exposure</th>
-                        <th>Humidity</th>
-                        <th>Temperature</th>
-                        <th>Watering Interval</th>
-                        <th>Fertilizing Interval</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {
-                        plants.map((plant, index) => (
-                            <Plant plant={plant} key={plant.id} categories={categories} rooms={rooms}/>
-                        ))
-                      }
-
-                      </tbody>
-                    </Table>
-                )}
-              </CardBody>
-            </Card>
-
-
-      </React.Fragment>
-
-      )
+        )
     }
 
 }

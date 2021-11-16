@@ -58,7 +58,7 @@ class CategoryItem extends React.PureComponent {
 }
 
 CategoryItem.propTypes = {
-  category: PropTypes.string.isRequired,
+  category: PropTypes.object.isRequired,
   label: PropTypes.string,
   isLastItem: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired
