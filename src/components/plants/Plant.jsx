@@ -18,19 +18,24 @@ class Plant extends React.PureComponent {
       requiredExposure,
       requiredHumidity,
       requiredTemperature,
-      room,
+      roomId,
       url,
       wateringInterval,
     } = this.props.plant;
 
     console.log(this.props.plant);
 
-    const {categories} = this.props;
+    const {categories, rooms} = this.props;
      console.log(categories)
       const category = categories.find(category => category.id === categoryId);
      let categoryName = '?';
      if(category !== undefined){
          categoryName = category.name;
+     }
+       const room = rooms.find(room => room.id === roomId);
+     let roomName = '?';
+     if(room !== undefined){
+         roomName = room.name;
      }
 
     return (
@@ -38,7 +43,7 @@ class Plant extends React.PureComponent {
               <td>{id}</td>
               <td>{name}</td>
               <td>{categoryName}</td>
-              <td>{room}</td>
+              <td>{roomName}</td>
               <td>{blooming.toString()}</td>
               <td>{difficulty}</td>
               <td>{requiredExposure}</td>

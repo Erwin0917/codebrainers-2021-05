@@ -1,13 +1,13 @@
-import {Card, CardBody, ListGroup, Table} from 'reactstrap';
+import {Card, CardBody, Table} from 'reactstrap';
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Plant from 'components/plants/Plant';
 import InProgress from 'components/shared/InProgress';
-import CategoryItem from "../categories/CategoryItem";
 
 const PLANTS_FETCH_DELAY = 500;
 const CATEGORIES_FETCH_DELAY = 1000;
+const ROOMS_FETCH_DELAY = 1500;
 
 class Plants extends React.PureComponent {
     constructor(props) {
@@ -15,10 +15,13 @@ class Plants extends React.PureComponent {
         this.state = {
           plants: [],
           categories: [],
+            rooms: [],
           successPlants: undefined,
           successCategories: undefined,
+            successRooms: undefined,
           inProgressPlants: false,
           inProgressCategories: false,
+            inProgressRooms: false,
         };
     }
 
@@ -29,6 +32,9 @@ class Plants extends React.PureComponent {
             })
         this.fetchPlants().finally(() => {
             this.setState({inProgressPlants: false});
+        });
+        this.fetchRooms().finally(() => {
+            this.setState({inProgressRooms: false});
         });
     }
 
@@ -63,7 +69,7 @@ class Plants extends React.PureComponent {
             requiredExposure: required_exposure,
             requiredHumidity: required_humidity,
             requiredTemperature: required_temperature,
-            room,
+            roomId: room,
             url,
             wateringInterval: watering_interval
         };
@@ -115,6 +121,31 @@ class Plants extends React.PureComponent {
         });
     }
 
+    fetchRooms() {
+
+        const requestUrl = 'http://gentle-tor-07382.herokuapp.com/rooms/';
+        this.setState({inProgressRooms: true});
+        return this.props.delayFetch(ROOMS_FETCH_DELAY, (resolve, reject) => {
+            axios.get(requestUrl)
+                .then((response) => {
+                    const data = response.data;
+                    const rooms = data.map((item) => {
+                        return {id: item.id, name: item.name};
+                    });
+                    const successRooms = true;
+                    this.setState({rooms, successRooms});
+                    resolve();
+                })
+                .catch((error) => {
+                    this.setState({successRooms: false});
+                    reject();
+                })
+                .finally(() => {
+                    console.log('Resolved');
+                });
+        });
+    }
+
     render() {
       const {
         plants,
@@ -124,8 +155,14 @@ class Plants extends React.PureComponent {
         categories,
           successPlants,
       } = this.state;
-      const success = successCategories && successPlants;
-      const inProgress = inProgressPlants || inProgressCategories;
+            const {
+          rooms,
+          inProgressRooms,
+          successRooms,
+      } = this.state;
+      const success = successCategories && successPlants && successRooms;
+      const inProgress = inProgressPlants || inProgressCategories || inProgressRooms;
+
 
       return (
           <React.Fragment>
@@ -136,6 +173,7 @@ class Plants extends React.PureComponent {
                 <InProgress inProgress={inProgress}/>
                   {successPlants === false && <p>Nie udało się pobrać Kwiatow</p>}
                   {successCategories === false && <p>Nie udało się pobrać Kategorii</p>}
+                  {successRooms === false && <p>Nie udało się pobrać Pokojów</p>}
                 {success && (
                     <Table hover striped responsive>
                       <thead>
@@ -156,7 +194,7 @@ class Plants extends React.PureComponent {
                       <tbody>
                       {
                         plants.map((plant, index) => (
-                            <Plant plant={plant} key={plant.id} categories={categories}/>
+                            <Plant plant={plant} key={plant.id} categories={categories} rooms={rooms}/>
                         ))
                       }
 
