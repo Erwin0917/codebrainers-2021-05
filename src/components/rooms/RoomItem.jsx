@@ -1,22 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { ListGroupItem } from "reactstrap";
+import { ListGroupItem } from 'reactstrap';
+import { roomPropType } from 'proptypes/RoomsPropTypes';
 
-const RoomItem = (props) => {
+class RoomItem extends React.PureComponent {
 
-    const { room } = props;
+  render() {
+    const room = this.props.room;
 
     return (
       <ListGroupItem>
-        { room.id } {' '}
         { room.name }
       </ListGroupItem>
     );
+  }
 
 }
 
 RoomItem.propTypes = {
-  room: PropTypes.object.isRequired,
+  room: roomPropType,
 };
 
 

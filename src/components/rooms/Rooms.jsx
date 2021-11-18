@@ -1,86 +1,95 @@
-import React from "react";
-import {Card, CardBody, ListGroup} from "reactstrap";
-import axios from "axios";
-import InProgress from "../shared/InProgress";
-import RoomItem from "./RoomItem";
+import React from 'react';
+import axios from 'axios';
+import Api from 'constants/Api';
+import { delay, ROOMS_FETCH_DELAY } from 'shared/Debug';
+import { plainToClass } from 'serializers/Serializer';
+import Room from 'models/Room';
 
-const ROOMS_FETCH_DELAY = 1000;
-
-class Rooms extends React.Component {
+const withRooms = (WrappedComponent) => {
+  return class extends React.PureComponent {
 
     constructor(props) {
-        super(props);
-        this.state = {
-            rooms: [],
-            successRooms: undefined,
-            inProgressRooms: false,
-        }
+      super(props);
+      this.state = {
+        roomsErrorMessage: '',
+        roomsInProgress: false,
+        roomsSuccess: undefined,
+        rooms: [],
+      };
     }
 
-    componentDidMount() {
-        this.fetchRooms().finally(() => {
-            this.setState({inProgressRooms: false});
-        });
-    }
+    /**
+     *
+     * @param {function} resolve
+     * @param {function} reject
+     * @returns {Promise}
+     */
+    fetchRooms = (resolve, reject) => {
+      return axios.get(Api.ROOMS)
+        .then((response) => this.fetchRoomsSuccess(response, resolve))
+        .catch((error) => this.fetchRoomsFailure(error, reject));
+    };
 
-    fetchRooms() {
-        const requestUrl = 'http://gentle-tor-07382.herokuapp.com/rooms/';
+    /**
+     * Fetch Rooms with some predefined delay.
+     * @returns {Promise<TimerHandler>}
+     */
+    fetchRoomsDelayed = () => {
+      console.log('Method Rooms.fetchRoomsDelayed() fired');
 
-        this.setState({inProgressRooms: true});
+      const roomsInProgress = true;
+      this.setState({ roomsInProgress });
 
-        return this.props.delayFetch(ROOMS_FETCH_DELAY, (resolve, reject) => {
-            axios.get(requestUrl)
-                .then((response) => {
-                    const data = response.data;
-                    const rooms = data.map((item) => {
-                        return {id: item.id, name: item.name};
-                    });
-                    const successRooms = true;
-                    this.setState({rooms, successRooms});
-                    resolve();
-                })
-                .catch((error) => {
-                    this.setState({successRooms: false});
-                    reject();
-                })
-                .finally(() => {
-                    console.log('Resolved');
-                });
-        });
-    }
+      return delay(ROOMS_FETCH_DELAY, this.fetchRooms)
+        .finally(this.fetchRoomsFinally);
+    };
+
+    fetchRoomsFailure = (error, reject) => {
+      const roomsSuccess = false;
+      const roomsErrorMessage = error.message;
+
+      this.setState({
+        roomsErrorMessage,
+        roomsSuccess,
+      });
+
+      reject();
+    };
+
+    fetchRoomsFinally = () => {
+      console.log('Rooms finally');
+      const roomsInProgress = false;
+      this.setState({ roomsInProgress });
+    };
+
+    fetchRoomsSuccess = (response, resolve) => {
+      const data = response.data;
+
+      const rooms = data.map(item => plainToClass(Room, item));
+      const roomsSuccess = true;
+      const roomsErrorMessage = '';
+
+      this.setState({
+        rooms,
+        roomsErrorMessage,
+        roomsSuccess,
+      });
+
+      console.log('Fetched rooms');
+
+      resolve();
+    };
 
     render() {
-        const  {
-            inProgressRooms,
-            rooms,
-            successRooms,
-        } = this.state;
-
-
-        return (
-            <Card className="mb-4">
-                <CardBody>
-                    <InProgress inProgress={inProgressRooms}/>
-                        {successRooms === false && <p>Unable to fetch rooms data</p>}
-                    {
-                        successRooms &&
-                        <ListGroup className="categories">
-                            {
-                                rooms.map((item, index, arr) =>
-                                    <RoomItem
-                                        room={item}
-                                        key={index}
-                                    />
-                                )
-                            }
-                        </ListGroup>
-                    }
-
-                </CardBody>
-            </Card>
-        )
-
+      return (
+        <WrappedComponent
+          { ...this.state }
+          { ...this.props }
+          fetchRooms={ this.fetchRoomsDelayed }
+        />
+      );
     }
-}
+  };
+};
 
-export default Rooms;
+export default withRooms;
