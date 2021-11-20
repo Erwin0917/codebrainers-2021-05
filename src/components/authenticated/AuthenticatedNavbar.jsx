@@ -15,27 +15,17 @@ import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import navbarItems from "components/navbar/constants/NavbarItems";
+import {useState} from "react";
 
-class PlantasticNavbar extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false
-    }
+function PlantasticNavbar () {
+  const [ isOpen, setIsOpen ] = useState(false);
+  function toggle () {
+    setIsOpen(!isOpen);
   }
-
-  toggle = () => {
-    const isOpen = !this.state.isOpen;
-    this.setState({isOpen});
-  };
-
-  render() {
-    const {isOpen} = this.state;
-    const {userFullName} = this.props;
-    return (
+      return (
         <Navbar color="dark" dark expand="md" className="mb-4">
           <NavbarBrand href={Routes.ROOT}>Plantastic</NavbarBrand>
-          <NavbarToggler onClick={() => this.toggle()} />
+          <NavbarToggler onClick={() => toggle()} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               {navbarItems.map((navbarItem) => (
@@ -62,7 +52,8 @@ class PlantasticNavbar extends React.PureComponent {
           </Collapse>
         </Navbar>
     );
-  }
 }
+
+
 
 export default PlantasticNavbar;
