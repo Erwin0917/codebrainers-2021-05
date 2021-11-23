@@ -1,9 +1,12 @@
 class Routes {
   static ROOT = '/';
   static CATEGORIES = '/categories';
+  static NOT_FOUND = '/404';
   static PLANTS = '/plants';
   static PLANTS_CREATE = Routes.PLANTS + '/create';
-  static PLANTS_EDIT = Routes.PLANTS + '/:plantId/edit';
+  static PLANT = Routes.PLANTS + '/:plantId';
+  static PLANT_EDIT = Routes.PLANT + '/edit';
+  static ACCOUNT = '/account';
   static ROOMS = '/rooms';
 }
 

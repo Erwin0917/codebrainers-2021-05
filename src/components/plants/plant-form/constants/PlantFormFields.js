@@ -1,13 +1,13 @@
 import Plant from 'models/Plant';
 import pick from 'lodash-es/pick';
-import moment from 'moment';
-import {
-  plantDifficultyOptions,
-  plantExposureOptions,
-  plantHumidityOptions,
-  plantTemperatureOptions
-} from 'constants/PlantConstants';
+import moment from 'moment-es6';
+import { plantDifficultyOptions } from 'constants/PlantConstants';
+import { FormikApiErrors } from 'components/shared/form/FormikApiErrors';
+import { DATE_FORMAT } from 'constants/Config';
 
+/**
+ * @todo Refactoring required. We require almost all fields on the form, does this class make sense any more?
+ */
 class PlantFormFields {
   static ID = 'id';
   static BLOOMING = 'blooming';
@@ -21,6 +21,8 @@ class PlantFormFields {
   static REQUIRED_HUMIDITY = 'requiredHumidity';
   static REQUIRED_TEMPERATURE = 'requiredTemperature';
   static ROOM = 'room';
+  static URL = 'url';
+  static UUID = 'uuid';
   static WATERING_INTERVAL = 'wateringInterval';
 
   /**
@@ -28,7 +30,7 @@ class PlantFormFields {
    * @param {Plant} plant
    * @return {*}
    */
-  static getInitialValues(plant) {
+  getInitialValues(plant) {
     const firstOf = (arr) => arr[0].id;
 
     const fieldNames = Object.values(PlantFormFields);
@@ -37,18 +39,32 @@ class PlantFormFields {
     return plant.id ? initialValues : Object.assign(initialValues, {
       [PlantFormFields.LAST_FERTILIZED]: moment(),
       [PlantFormFields.LAST_WATERED]: moment(),
-      [PlantFormFields.REQUIRED_EXPOSURE]: firstOf(plantExposureOptions),
-      [PlantFormFields.REQUIRED_HUMIDITY]: firstOf(plantHumidityOptions),
+      [PlantFormFields.WATERING_INTERVAL]: 7,
+      [PlantFormFields.FERTILIZING_INTERVAL]: 14,
       [PlantFormFields.DIFFICULTY]: firstOf(plantDifficultyOptions),
-      [PlantFormFields.REQUIRED_TEMPERATURE]: firstOf(plantTemperatureOptions),
     });
   }
 
-  static getDateAsYMD(value) {
-    return moment.isMoment(value) ? value.format('YYYY-MM-DD') : '';
+  getInitialStatus() {
+    return FormikApiErrors.getInitialStatus();
   }
 
-  static areValuesEqual(prevValues, nextValues) {
+  getDateAsYMD(value) {
+    return moment.isMoment(value) ? value.format(DATE_FORMAT) : '';
+  }
+
+  /**
+   *
+   * @param {object} apiErrors
+   * @param {ApiErrorStatus} status
+   * @return {ApiErrors}
+   */
+  getStatusFromApi(apiErrors, status) {
+    return FormikApiErrors.getStatusFromApi(apiErrors, status);
+  }
+
+
+  areValuesEqual(prevValues, nextValues) {
     const prev = prevValues || {};
     const next = nextValues || {};
 
@@ -63,6 +79,8 @@ class PlantFormFields {
       [ PlantFormFields.REQUIRED_HUMIDITY ],
       [ PlantFormFields.REQUIRED_TEMPERATURE ],
       [ PlantFormFields.ROOM ],
+      [ PlantFormFields.URL ], // Not really, as a derivative of ID
+      [ PlantFormFields.UUID ],
       [ PlantFormFields.WATERING_INTERVAL ],
     ];
 
@@ -80,15 +98,12 @@ class PlantFormFields {
     const dateDiff = (key) => {
       const firstDateTime = prev[key];
       const secondDateTime = next[key];
-      const asYmd = PlantFormFields.getDateAsYMD;
+      const asYmd = plantFormFields.getDateAsYMD;
       return asYmd(firstDateTime) !== asYmd(secondDateTime);
     };
 
-    if (dateTimeFields.some(dateDiff)) {
-      return false;
-    }
+    return !dateTimeFields.some(dateDiff);
 
-    return true;
   }
 
   /**
@@ -96,10 +111,15 @@ class PlantFormFields {
    * @param {Object} values
    * @returns {Plant}
    */
-  static toModel(values) {
+  toModel(values) {
     const plant = new Plant();
     return Object.assign(plant, values);
   }
 }
 
-export default PlantFormFields;
+const plantFormFields = new PlantFormFields();
+
+export {
+  plantFormFields,
+  PlantFormFields
+};

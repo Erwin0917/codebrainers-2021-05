@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import navbarItems from 'components/navbar/constants/NavbarItems';
 import PropTypes from 'prop-types';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 
 class AuthenticatedNavbar extends React.PureComponent {
   constructor(props) {
@@ -34,7 +35,7 @@ class AuthenticatedNavbar extends React.PureComponent {
     const { isOpen } = this.state;
     const { onLogout } = this.props;
     return (
-      <Navbar color="dark" dark expand="md" className="mb-4">
+      <Navbar color="dark" dark expand="md">
         <NavbarBrand href={ Routes.ROOT }>Plantastic</NavbarBrand>
         <NavbarToggler onClick={ this.toggle } />
         <Collapse isOpen={ isOpen } navbar>
@@ -60,7 +61,9 @@ class AuthenticatedNavbar extends React.PureComponent {
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem>
-                  Preferences…
+                  <RouterNavLink to={ Routes.ACCOUNT }>
+                    Preferences…
+                  </RouterNavLink>
                 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem onClick={ onLogout }>

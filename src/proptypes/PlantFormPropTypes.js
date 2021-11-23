@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import moment from 'moment-es6';
-import PlantFormFields from 'components/plants/plant-form/constants/PlantFormFields';
+import { PlantFormFields } from 'components/plants/plant-form/constants/PlantFormFields';
 import { categoriesPropType } from 'proptypes/CategoriesPropTypes';
 import { roomsPropType } from 'proptypes/RoomsPropTypes';
 
@@ -24,10 +24,14 @@ const plantFormInformationPropTypes = {
   rooms: roomsPropType,
 };
 
+const plantInProgressPropType = PropTypes.string.isRequired;
+
 const plantFormPropTypesBase = {
   ...plantFormInformationPropTypes,
   initialValues: plantFormInitialValuesPropTypes,
   onSubmit: PropTypes.func.isRequired,
+  onRemove: PropTypes.func,
+  plantInProgress: plantInProgressPropType,
 };
 
 const plantFormPropTypes = {
@@ -44,4 +48,5 @@ export {
   plantFormCardPropTypes,
   plantFormInformationPropTypes,
   plantFormPropTypes,
+  plantInProgressPropType,
 };

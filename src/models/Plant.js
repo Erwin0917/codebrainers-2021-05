@@ -1,5 +1,6 @@
-import { JsonConverter, JsonObject, JsonProperty, JsonType } from 'ta-json';
+import { JsonConverter, JsonObject, JsonProperty, JsonType, JsonWriteonly, OnDeserialized } from 'ta-json';
 import MomentSerializer from 'serializers/MomentSerializer';
+import { nanoid } from 'nanoid';
 
 @JsonObject()
 class Plant {
@@ -13,6 +14,7 @@ class Plant {
 
   @JsonType(String)
   @JsonProperty()
+  @JsonWriteonly()
   categorySlug = '';
 
   @JsonType(Number)
@@ -21,7 +23,7 @@ class Plant {
 
   @JsonType(Number)
   @JsonProperty()
-  fertilizingInterval = 0;
+  fertilizingInterval = undefined;
 
   @JsonType(Number)
   @JsonProperty()
@@ -31,6 +33,8 @@ class Plant {
   @JsonConverter(new MomentSerializer())
   @JsonType(String)
   lastFertilized = undefined;
+
+  // test
 
   @JsonProperty()
   @JsonConverter(new MomentSerializer())
@@ -59,11 +63,22 @@ class Plant {
 
   @JsonType(String)
   @JsonProperty()
+  @JsonWriteonly()
   url = '';
 
   @JsonType(Number)
   @JsonProperty()
-  wateringInterval = 0;
+  wateringInterval = undefined;
+
+  constructor() {
+    this.uuidRegenerate();
+  }
+
+  @OnDeserialized()
+  uuidRegenerate() {
+    this.uuid = nanoid();
+  }
+
 }
 
 export default Plant;

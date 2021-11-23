@@ -7,25 +7,25 @@ import LoadingPage from 'pages/loading/LoadingPage';
 const Authenticated = React.lazy(() => import('pages/authenticated/AuthenticatedPage'));
 
 const App = () => {
-  
+
   const [ token, setToken ] = useState(Auth.getTokenFromStorage());
   const isAuthenticated = token && token !== Auth.emptyToken;
-  
+
   const onTokenObtained = (token) => {
     Auth.putTokenToStorage(token);
     setToken(token);
   };
-  
+
   const onLogout = () => onTokenObtained(Auth.emptyToken);
-  
+
   useEffect(Auth.appendAxiosAuthorizationHeader(token), [ token ]);
-  
+
   return (
     <Suspense fallback={ <LoadingPage /> }>
       {
         isAuthenticated ?
-                <Authenticated onLogout={ onLogout } /> :
-                <LoginPage onTokenObtained={ onTokenObtained } />
+          <Authenticated onLogout={ onLogout } /> :
+          <LoginPage onTokenObtained={ onTokenObtained } />
       }
     </Suspense>
   );
